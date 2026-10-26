@@ -3,12 +3,11 @@
 FireBuddy is an SMS wildfire assistant: text it an address and it watches that
 place for active fires and official alerts, texts you first when something
 changes, and answers plain-language questions like "should I leave?", "is the
-wind pointing my way?", or "find me a shelter." It's built to demonstrate
-FDE-grade agentic engineering — a Claude tool-using agent given real autonomy
-over a safety-relevant domain, but with every decision that actually matters
-(whether to alert, what guidance level to give, what an official order said)
-locked to deterministic code and a runtime grounding validator, never to the
-LLM's judgment. See [`PLAN.md`](PLAN.md) for the full design and
+wind pointing my way?", or "find me a shelter." A Claude tool-using agent
+handles the conversational layer. Decisions that matter — whether to send a
+proactive alert, what guidance level to give, what an official order said —
+are locked to deterministic code and a runtime grounding validator, not to
+the LLM's judgment. See [`PLAN.md`](PLAN.md) for the full design and
 [`STATUS.md`](STATUS.md) for build history, live verification, and what's
 still blocked.
 
@@ -39,7 +38,7 @@ urgency to give, or *what* an official order says — `monitor.py`'s triggers,
 those calls. The agent's only job is explaining facts that tools already
 returned, and a validator checks every reply before it ships.
 
-## Safety-first design
+## Safety design
 
 | Decision | Owned by | Rule |
 |---|---|---|
@@ -162,18 +161,19 @@ uvicorn firebuddy.app:app --reload
 - `POST /sms` — Twilio webhook. Verifies the Twilio signature unless `DRY_RUN=true`.
 - A background task runs the monitor loop every `MONITOR_INTERVAL_SEC` seconds.
 
-### SMS: pending carrier registration
+### SMS status
+
+**SMS-ready; Twilio carrier registration (A2P 10DLC) required before sending
+to real users.**
 
 The webhook, router, onboarding, and the full conversation flow are built and
 tested end to end against a console/dry-run SMS backend (see `sim.py` above).
-What's not live is a real text round-tripping through Twilio to a phone: a
-Twilio trial number can only text pre-verified numbers, and sending to
-arbitrary numbers requires **A2P 10DLC carrier registration**, which takes
-Twilio/the carriers on the order of weeks and is currently pending. Until
-that clears, `DRY_RUN=true` (the default) prints outbound messages to the
-console instead of sending — safe by default. Once registration clears, going
-live is: set `TWILIO_ACCOUNT_SID`/`TWILIO_AUTH_TOKEN`/`TWILIO_FROM_NUMBER`,
-run `ngrok http 8000` and point the Twilio number's webhook at
+A Twilio trial number can only text pre-verified numbers; sending to arbitrary
+numbers requires A2P 10DLC carrier registration, which is pending. Until it
+clears, `DRY_RUN=true` (the default) prints outbound messages to the console
+instead of sending. Once registration clears, going live is: set
+`TWILIO_ACCOUNT_SID`/`TWILIO_AUTH_TOKEN`/`TWILIO_FROM_NUMBER`, run
+`ngrok http 8000` and point the Twilio number's webhook at
 `<PUBLIC_BASE_URL>/sms`, add your own number to `SMS_ALLOWLIST`, and set
 `DRY_RUN=false`.
 
