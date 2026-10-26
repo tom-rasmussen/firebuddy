@@ -13,6 +13,14 @@
   `(place_id, key)`; `incident_state.alerted_thresholds` tracks which growth thresholds a
   fire has already crossed so a newly-discovered fire that's already past a threshold
   doesn't immediately double-alert alongside its new-fire message.
+- **Phase 3 — `assess_situation` + `wind_check`.** `assess.py`: pure functions
+  `wind_relation` (toward ≤45°/crosswind ≤90°/away/light-variable <5mph/unknown),
+  `wind_is_stale` (>2h), `wind_check` (composes a `wind_data()` result + bearing into the
+  tool's full shape, always includes the terrain/ember caveat), and `assess_situation`
+  (the 5-level table, highest match wins: LEAVE NOW → FOLLOW SHELTER ORDER → GET READY →
+  BE READY → MONITOR). Added `bearing_deg` to `fires_near()`'s output (exact degrees, not
+  just the 16-point compass label) since `wind_relation` needs it for the `angular_diff`
+  math — a necessary addition to Phase 1's fires client, not a design deviation.
 
 ## Verified live
 - Geocoding: Census for `3301 Camino Tassajara, Danville, CA` → `(37.799428, -121.924274)`.
@@ -31,6 +39,11 @@
   mocked source data (new fire → 1 alert; repeat → 0; growth threshold → 1; containment →
   1; NWS watched-event verbatim → 1 incl. exact instruction text; unwatched NWS event →
   0; due follow-up → status template + marked done).
+- `assess.wind_check()` run live against real NWS wind data for the Danville address: the
+  nearest station's latest observation is dated 2026-10-22 (several days old) with null
+  speed/direction — `stale` correctly comes back `True`. 25 unit tests cover every
+  guidance level and every wind relation (toward/crosswind/away/light-variable/unknown),
+  plus staleness boundaries.
 
 ## Deviations
 - None from section 2/7 design rules. Added `scripts/verify_phase1.py` (not in the file list
@@ -43,4 +56,4 @@
   there, per section 0.
 
 ## Next
-- Phase 3: `assess_situation` + `wind_check`.
+- Phase 4: agent + tools + validator + traces.
