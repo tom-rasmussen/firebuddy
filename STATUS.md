@@ -50,6 +50,40 @@
   `requirements.txt` — FastAPI's `Form(...)` parsing requires it even for Twilio's
   URL-encoded webhook body; not a design deviation, just a missing transitive dependency
   caught by actually running the endpoint.
+- **Phase 6 — Evals + README.** `evals/scenarios.py`: the 10 minimum scenarios from
+  section 8 (each with its own fixed fires/alerts/wind/shelters world), each with a
+  `check()` that inspects the actual tool-call results (e.g. `assess_situation`'s
+  `level`) rather than fragile text-matching on the LLM's prose, plus cross-cutting
+  checks (every turn's grounding validator passed, the mandatory 911/feel-unsafe line
+  is present). `evals/runner.py`: installs each scenario's world via the same
+  monkeypatch technique as `sim.py`, runs the real `agent.run_turn` per turn, and
+  enforces `EVAL_MAX_TURNS` as a hard global cap across the whole suite (a
+  `TurnBudgetExceeded` on scenario N aborts the run and records the remaining
+  scenarios as failed rather than silently skipping them). `evals/run_evals.py`: CLI
+  entry point; prints `BLOCKED` and exits non-zero if `ANTHROPIC_API_KEY` isn't set,
+  rather than faking a result. `README.md`: setup, tests, live-check script, the
+  simulator demo transcript, going-live steps for real SMS, running real agent
+  conversations, evals, and trace inspection.
+  - **Fixed a real bug found while building the evals**, not a test-writing mistake:
+    `agent.validate()`'s number-grounding check flagged "911" (and would've flagged
+    "211") as an ungrounded number, because the mandatory safety line the system
+    prompt requires on every substantive reply ("call 911...") contains a digit that
+    never appears in any tool result. Every single real agent turn would have failed
+    grounding, retried, failed again, and fallen back to the deterministic template —
+    i.e. the agent would never have produced a real LLM answer in practice. Fixed by
+    exempting `{"911", "211"}` as safety constants in `agent.SAFE_NUMBER_CONSTANTS`
+    (they're fixed values dictated by the system prompt, not situational facts that
+    could be hallucinated wrong). Added a regression test
+    (`test_validate_911_and_211_are_exempt_from_grounding`). This is exactly the kind
+    of thing an eval suite is for — it surfaced from writing a scenario whose expected
+    reply included the mandatory line, not from the unit tests (which hadn't included
+    that line in their scripted replies).
+  - Also made `sim.py`'s geocoding fixture-backed (`FIREBUDDY_FIXTURES` forced on in
+    `install_fakes()` if not already set) so the simulator demo in the README runs
+    fully offline, per section 0's definition of done ("the simulator demo in README
+    works offline with fixtures") — Phase 5's live run above used real Census
+    geocoding, which was correct for that phase's live-verification goal but not for
+    the README's offline demo requirement.
 
 ## Verified live
 - Geocoding: Census for `3301 Camino Tassajara, Danville, CA` → `(37.799428, -121.924274)`.
@@ -98,28 +132,57 @@
   `HELP` lists commands. Found and fixed two sim-only parsing bugs while running this
   (multi-word shelter names, multi-word NWS event aliases) — real bugs, not flaky tests;
   fixed and covered them in `test_sim.py` before moving on.
+- `evals/run_evals.py` run with no `ANTHROPIC_API_KEY` set: correctly prints
+  `BLOCKED: set ANTHROPIC_API_KEY to run the live eval suite against the real model.`
+  and exits non-zero (confirmed, see Blocked below). The harness mechanics themselves
+  (world install/restore, per-scenario DB, turn-budget enforcement and abort-on-exceeded,
+  pass/fail reporting) are exercised with a scripted `FakeLLMClient` in
+  `tests/test_evals.py` — including a scenario that genuinely passes, one that
+  genuinely fails on an unwanted phrase, the `watch_and_followup` scenario's
+  add-place-then-schedule-followup multi-tool-call flow, and a turn-budget-exceeded
+  abort with `EVAL_MAX_TURNS` monkeypatched to 1.
+
+## Definition of done (against PLAN.md section 0)
+- [x] All phases committed (one commit per phase, this one included).
+- [x] `pytest` green: 135 tests, 0 failures, fully offline.
+- [x] `ruff check .` green.
+- [x] The simulator demo in the README works offline with fixtures (fires, alerts,
+  wind, shelters, and geocoding are all fixture-backed inside `sim.py`).
+- [x] Live data verified for a Danville, CA address (Phase 1's `scripts/verify_phase1.py`
+  run against real Census/NIFC/NWS/FEMA; Phase 2/3's monitor and wind-staleness logic
+  also run live against that same address).
+- [x] STATUS.md (this file) lists what's blocked and the exact steps to finish it.
 
 ## Deviations
 - None from section 2/7 design rules. Added `scripts/verify_phase1.py` (not in the file list
   in section 7) purely as the live-check script Phase 1 asks for; it's not part of the
   app's runtime path.
 
-## Blocked
-- **Phase 4 live verification — needs `ANTHROPIC_API_KEY`.** The agent is fully built and
-  tested against a fake LLM client + fixtures (see above), but no real Claude conversation
-  has been run (section 8's "Simulator: 'should I leave,' 'find a shelter,' ... all work"
-  demands the real model). The actual conversation flows this requires are already proven
-  via `run_turn` + `FakeLLMClient` tests; once a key is set, re-run with
-  `agent.AnthropicLLMClient()` to confirm against the live model and append the transcript
-  here. Model: `claude-sonnet-5-5` per `ANTHROPIC_MODEL`.
-- **Phase 5 real SMS round-trip — needs Twilio credentials** (`TWILIO_ACCOUNT_SID`,
-  `TWILIO_AUTH_TOKEN`, `TWILIO_FROM_NUMBER`, `PUBLIC_BASE_URL`/ngrok). Router, webhook, and
-  simulator are fully built and tested against the console/dry-run SMS backend (see above);
-  what's missing is an actual text round-tripping through Twilio to Tom's phone. To finish:
-  set the four Twilio env vars in `.env`, run `ngrok http 8000`, set `PUBLIC_BASE_URL` to
-  the ngrok URL, point the Twilio number's webhook at `<PUBLIC_BASE_URL>/sms`, add Tom's
-  number to `SMS_ALLOWLIST`, set `DRY_RUN=false`, then `uvicorn firebuddy.app:app --reload`
-  and text the Twilio number.
+## Blocked — exact steps to finish
+
+Two things need keys only Tom has. Everything else is done, tested, and live-verified
+where it can be without them.
+
+1. **`ANTHROPIC_API_KEY`** (unlocks: real agent conversations in `sim.py` and `/sms`,
+   and the eval suite). Get a key from the Anthropic Console, add it to `.env` as
+   `ANTHROPIC_API_KEY=...` (optionally set `ANTHROPIC_MODEL`, defaults to
+   `claude-sonnet-5-5`). Then:
+   - `PYTHONPATH=. python sim.py` and ask it "should I leave?", "find me a shelter",
+     "is the wind pointing my way?", "watch my parents' place too", "check back in 2
+     hours" — all already proven against a scripted fake client in `tests/test_agent.py`;
+     this confirms the real model too.
+   - `PYTHONPATH=. python -m evals.run_evals` — runs the 10 scenarios against the real
+     model, capped at `EVAL_MAX_TURNS` (default 60) total turns.
+2. **Twilio credentials + ngrok** (unlocks: a real SMS round-trip to Tom's phone).
+   Set `TWILIO_ACCOUNT_SID`, `TWILIO_AUTH_TOKEN`, `TWILIO_FROM_NUMBER` in `.env`; run
+   `ngrok http 8000`; set `PUBLIC_BASE_URL` to the ngrok URL and point the Twilio
+   number's messaging webhook at `<PUBLIC_BASE_URL>/sms`; add Tom's own number
+   (E.164) to `SMS_ALLOWLIST`; set `DRY_RUN=false`; run
+   `uvicorn firebuddy.app:app --reload`; text the Twilio number.
+
+Say "continue from STATUS.md" once keys are set and I'll run the live verifications
+above and append the results here.
 
 ## Next
-- Phase 6: evals + README.
+- Nothing — the MVP (all 6 phases) is built, tested, and committed. The two blocked
+  items above are the only things standing between this and a fully live demo.

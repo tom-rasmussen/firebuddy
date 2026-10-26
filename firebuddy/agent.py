@@ -421,6 +421,10 @@ class AnthropicLLMClient:
 
 TIME_PATTERN = re.compile(r"\b\d{1,2}(:\d{2})?\s*(AM|PM|am|pm)\b")
 NUMBER_PATTERN = re.compile(r"\d[\d,]*\.?\d*")
+# Fixed emergency numbers from the mandatory safety line / emergency_resources tool.
+# These are constants dictated by the system prompt, not situational facts that could
+# be hallucinated wrong, so they're exempt from the "every number must be grounded" check.
+SAFE_NUMBER_CONSTANTS = {"911", "211"}
 BLOCKED_PHRASES = [
     re.compile(r"you'?re safe", re.IGNORECASE),
     re.compile(r"it'?s safe", re.IGNORECASE),
@@ -438,7 +442,8 @@ class ValidatorResult:
 
 def _extracted_numbers(text: str) -> list[str]:
     without_times = TIME_PATTERN.sub(" ", text)
-    return [m.group().replace(",", "") for m in NUMBER_PATTERN.finditer(without_times)]
+    numbers = (m.group().replace(",", "").rstrip(".") for m in NUMBER_PATTERN.finditer(without_times))
+    return [n for n in numbers if n not in SAFE_NUMBER_CONSTANTS]
 
 
 def validate(final_text: str, grounding_blob: str, user_text: str) -> ValidatorResult:

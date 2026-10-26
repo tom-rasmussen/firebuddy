@@ -64,6 +64,8 @@ def _fake_find_shelters(lat, lon, max_results=3):
 
 
 def install_fakes():
+    if not config.FIREBUDDY_FIXTURES:
+        config.FIREBUDDY_FIXTURES = "fixtures"  # geocoding uses fixtures/geocode.json -> fully offline
     fires_source.fires_near = _fake_fires_near
     nws_source.official_alerts = _fake_official_alerts
     nws_source.wind_data = _fake_wind_data

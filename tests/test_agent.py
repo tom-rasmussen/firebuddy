@@ -151,6 +151,15 @@ def test_validate_unquoted_route_instruction_fails():
     assert not result.ok
 
 
+def test_validate_911_and_211_are_exempt_from_grounding():
+    text = (
+        "MONITOR. If you're in immediate danger, call 911. If you feel unsafe, leave. "
+        "You don't need to wait for an order. Call 211 for shelter info."
+    )
+    result = agent.validate(text, "{}", "")
+    assert result.ok
+
+
 def test_validate_empty_reply_fails():
     result = agent.validate("   ", "{}", "")
     assert not result.ok
