@@ -182,6 +182,36 @@ def test_run_turn_tool_then_grounded_text(conn, user, place):
     assert len(json.loads(trace["tool_calls"])) == 1
 
 
+def test_run_turn_handles_thinking_blocks_alongside_tool_use(conn, user, place):
+    # claude-sonnet-5-5 (extended thinking) returns a ThinkingBlock alongside tool_use;
+    # it must round-trip into the next assistant message without crashing.
+    llm = agent.FakeLLMClient(
+        [
+            agent.FakeMessage(
+                content=[
+                    agent.ThinkingBlock(),
+                    agent.ToolUseBlock(id="t1", name="assess_situation", input={"place_id": place["id"]}),
+                ],
+                stop_reason="tool_use",
+            ),
+            agent.FakeMessage(
+                content=[agent.ThinkingBlock(), agent.TextBlock(text="GET READY. 9.0 mi E.")],
+                stop_reason="end_turn",
+            ),
+        ]
+    )
+    reply = agent.run_turn(conn, user, "should I leave?", llm)
+    assert "GET READY" in reply
+    # the thinking block must have round-tripped into the follow-up request's messages
+    assert any(
+        isinstance(c, dict) and c.get("type") == "thinking"
+        for call in llm.calls
+        for msg in call["messages"]
+        if isinstance(msg.get("content"), list)
+        for c in msg["content"]
+    )
+
+
 def test_run_turn_grounding_retry_recovers(conn, user, place):
     llm = agent.FakeLLMClient(
         [

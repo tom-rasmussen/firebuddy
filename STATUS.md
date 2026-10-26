@@ -1,5 +1,44 @@
 # FireBuddy build status
 
+## Live model verification (ANTHROPIC_API_KEY now set) — done
+Ran the real `claude-sonnet-5-5` agent via `sim.py` for all five conversational
+scenarios PLAN.md asks for, then the full eval suite.
+
+- **`sim.py` against the real model:** "should I leave?", "is the wind pointing my
+  way?", "find me a shelter", "watch my parents' place at 500 Diablo Rd Danville too",
+  and "check back in 2 hours" — all five produced correct, fully-grounded replies
+  (right guidance level, wind relation, shelter fallback messaging, a genuinely
+  distinct second place, and a scheduled follow-up). No validator failures, no
+  fallback-to-template responses.
+- **`python -m evals.run_evals`: 10/10 scenarios passed, 0 ungrounded/failed-validator
+  turns across all scenarios** (11 total agent turns, well under `EVAL_MAX_TURNS=60`).
+- **Found and fixed two real bugs while running this — both from hitting the actual
+  live API/data for the first time, not from anything the fake-client tests could
+  have caught:**
+  1. **Crash on extended-thinking responses.** `claude-sonnet-5-5` sometimes returns a
+     `ThinkingBlock` alongside `tool_use`/`text` blocks (adaptive — it didn't appear
+     on every turn, which is why this survived several turns before crashing on
+     "watch my parents' place too"). `agent._block_to_dict()` only knew about
+     `text`/`tool_use` and crashed with `AttributeError: 'ThinkingBlock' object has
+     no attribute 'id'` trying to treat it as a tool call. Fixed by handling
+     `thinking`/`redacted_thinking` block types explicitly (they must round-trip
+     verbatim into the next assistant message, per Anthropic's extended-thinking +
+     tool-use requirement) with a safe fallback for any other unrecognized type.
+     Added a `ThinkingBlock` fake and a regression test
+     (`test_run_turn_handles_thinking_blocks_alongside_tool_use`) so this is now
+     covered without needing a live key.
+  2. **Fake geocoding collapsed every address to one point.** `sim.py` forces
+     `FIREBUDDY_FIXTURES` on for fully-offline geocoding (see prior polish entry
+     below), but `fixtures/geocode.json` only had one real entry plus a catch-all
+     `default` — so "500 Diablo Rd, Danville, CA" geocoded to the *same* lat/lon as
+     Home. The real model correctly noticed this and refused to confirm it was
+     watching a distinct "parents' place," which is honest, correctly-grounded
+     behavior from the agent — but it defeated the demo. Fixed by adding a distinct
+     `"diablo"` fixture entry near (but not identical to) Home; re-ran the scenario
+     and the model now correctly reports a genuinely separate second place. Added a
+     regression test (`test_geocode_fixture_diablo_is_distinct_from_default`).
+- 157 tests total (2 new), all green; `ruff` clean.
+
 ## Post-MVP polish (from Tom's own sim run)
 - **Local time instead of UTC.** `nws.get_timezone(lat, lon)` reads `properties.timeZone`
   off the already-cached NWS `/points` lookup (falls back to `DEFAULT_TIMEZONE =
@@ -173,13 +212,15 @@
 
 ## Definition of done (against PLAN.md section 0)
 - [x] All phases committed (one commit per phase, this one included).
-- [x] `pytest` green: 135 tests, 0 failures, fully offline.
+- [x] `pytest` green: 157 tests, 0 failures, fully offline.
 - [x] `ruff check .` green.
 - [x] The simulator demo in the README works offline with fixtures (fires, alerts,
   wind, shelters, and geocoding are all fixture-backed inside `sim.py`).
 - [x] Live data verified for a Danville, CA address (Phase 1's `scripts/verify_phase1.py`
   run against real Census/NIFC/NWS/FEMA; Phase 2/3's monitor and wind-staleness logic
   also run live against that same address).
+- [x] Real agent + eval suite verified against the live Claude model (see top of this
+  file) — the one piece that was blocked pending `ANTHROPIC_API_KEY`.
 - [x] STATUS.md (this file) lists what's blocked and the exact steps to finish it.
 
 ## Deviations
@@ -189,29 +230,20 @@
 
 ## Blocked — exact steps to finish
 
-Two things need keys only Tom has. Everything else is done, tested, and live-verified
-where it can be without them.
+One thing left, needs Twilio credentials only Tom has. `ANTHROPIC_API_KEY` is set and
+live-verified (see above) — real agent conversations and the eval suite both work.
 
-1. **`ANTHROPIC_API_KEY`** (unlocks: real agent conversations in `sim.py` and `/sms`,
-   and the eval suite). Get a key from the Anthropic Console, add it to `.env` as
-   `ANTHROPIC_API_KEY=...` (optionally set `ANTHROPIC_MODEL`, defaults to
-   `claude-sonnet-5-5`). Then:
-   - `PYTHONPATH=. python sim.py` and ask it "should I leave?", "find me a shelter",
-     "is the wind pointing my way?", "watch my parents' place too", "check back in 2
-     hours" — all already proven against a scripted fake client in `tests/test_agent.py`;
-     this confirms the real model too.
-   - `PYTHONPATH=. python -m evals.run_evals` — runs the 10 scenarios against the real
-     model, capped at `EVAL_MAX_TURNS` (default 60) total turns.
-2. **Twilio credentials + ngrok** (unlocks: a real SMS round-trip to Tom's phone).
-   Set `TWILIO_ACCOUNT_SID`, `TWILIO_AUTH_TOKEN`, `TWILIO_FROM_NUMBER` in `.env`; run
-   `ngrok http 8000`; set `PUBLIC_BASE_URL` to the ngrok URL and point the Twilio
-   number's messaging webhook at `<PUBLIC_BASE_URL>/sms`; add Tom's own number
-   (E.164) to `SMS_ALLOWLIST`; set `DRY_RUN=false`; run
-   `uvicorn firebuddy.app:app --reload`; text the Twilio number.
+- **Twilio credentials + ngrok** (unlocks: a real SMS round-trip to Tom's phone).
+  Set `TWILIO_ACCOUNT_SID`, `TWILIO_AUTH_TOKEN`, `TWILIO_FROM_NUMBER` in `.env`; run
+  `ngrok http 8000`; set `PUBLIC_BASE_URL` to the ngrok URL and point the Twilio
+  number's messaging webhook at `<PUBLIC_BASE_URL>/sms`; add Tom's own number
+  (E.164) to `SMS_ALLOWLIST`; set `DRY_RUN=false`; run
+  `uvicorn firebuddy.app:app --reload`; text the Twilio number.
 
-Say "continue from STATUS.md" once keys are set and I'll run the live verifications
-above and append the results here.
+Say "continue from STATUS.md" once that's set up and I'll run the live SMS
+verification and append the results here.
 
 ## Next
-- Nothing — the MVP (all 6 phases) is built, tested, and committed. The two blocked
-  items above are the only things standing between this and a fully live demo.
+- Nothing — the MVP (all 6 phases) is built, tested, and committed, and the agent is
+  now verified against the real model. Twilio + ngrok above is the only thing left
+  between this and a fully live demo on Tom's phone.

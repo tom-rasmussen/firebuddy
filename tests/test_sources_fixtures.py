@@ -18,6 +18,13 @@ def test_geocode_fixture_match():
     assert "Danville" in result["matched_address"]
 
 
+def test_geocode_fixture_diablo_is_distinct_from_default():
+    home = geocode.geocode("123 Main St, Danville, CA")
+    parents = geocode.geocode("500 Diablo Rd, Danville, CA")
+    assert (parents["lat"], parents["lon"]) != (home["lat"], home["lon"])
+    assert "Diablo" in parents["matched_address"]
+
+
 def test_fires_near_fixture():
     incidents = fires.fires_near(HOME_LAT, HOME_LON, 15)
     assert len(incidents) == 1

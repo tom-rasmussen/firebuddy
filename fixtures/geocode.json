@@ -1,4 +1,10 @@
 {
+  "diablo": {
+    "lat": 37.8183,
+    "lon": -121.9623,
+    "matched_address": "500 Diablo Rd, Danville, CA, 94526",
+    "source": "fixture"
+  },
   "danville": {
     "lat": 37.8216,
     "lon": -122.0001,

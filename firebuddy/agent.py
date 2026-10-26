@@ -382,6 +382,13 @@ class ToolUseBlock:
 
 
 @dataclass
+class ThinkingBlock:
+    thinking: str = "..."
+    signature: str = "sig"
+    type: str = "thinking"
+
+
+@dataclass
 class FakeMessage:
     content: list
     stop_reason: str
@@ -486,9 +493,21 @@ def _extract_text(message) -> str:
 
 
 def _block_to_dict(block) -> dict:
+    """Round-trip a response content block back into the next request's assistant
+    message. Extended-thinking models (e.g. claude-sonnet-5-5) can return thinking/
+    redacted_thinking blocks alongside text/tool_use -- these must be echoed back
+    verbatim in multi-turn tool-use conversations or the API rejects the request."""
     if block.type == "text":
         return {"type": "text", "text": block.text}
-    return {"type": "tool_use", "id": block.id, "name": block.name, "input": block.input}
+    if block.type == "tool_use":
+        return {"type": "tool_use", "id": block.id, "name": block.name, "input": block.input}
+    if block.type == "thinking":
+        return {"type": "thinking", "thinking": block.thinking, "signature": block.signature}
+    if block.type == "redacted_thinking":
+        return {"type": "redacted_thinking", "data": block.data}
+    if hasattr(block, "model_dump"):
+        return block.model_dump()
+    raise ValueError(f"Unrecognized content block type: {block.type!r}")
 
 
 def build_system_prompt(places) -> str:
