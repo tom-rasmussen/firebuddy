@@ -1,0 +1,38 @@
+{
+  "features": [
+    {
+      "attributes": {
+        "shelter_name": "Monte Vista HS Gym",
+        "address": "3131 Stone Valley Rd",
+        "city": "Danville",
+        "state": "CA",
+        "zip": "94526",
+        "shelter_status": "OPEN",
+        "evacuation_capacity": 150,
+        "total_population": 12,
+        "pet_accommodations_code": "Y",
+        "ada_compliant": "Y",
+        "wheelchair_accessible": "Y",
+        "org_name": "American Red Cross"
+      },
+      "geometry": { "x": -121.9775, "y": 37.8277 }
+    },
+    {
+      "attributes": {
+        "shelter_name": "Closed Shelter Example",
+        "address": "1 Nowhere Rd",
+        "city": "Danville",
+        "state": "CA",
+        "zip": "94526",
+        "shelter_status": "CLOSED",
+        "evacuation_capacity": 0,
+        "total_population": 0,
+        "pet_accommodations_code": "N",
+        "ada_compliant": "N",
+        "wheelchair_accessible": "N",
+        "org_name": "County OES"
+      },
+      "geometry": { "x": -121.95, "y": 37.81 }
+    }
+  ]
+}

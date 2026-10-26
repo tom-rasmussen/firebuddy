@@ -1,0 +1,19 @@
+{
+  "features": [
+    {
+      "properties": {
+        "id": "urn:oid:2.49.0.1.840.0.fixture-redflag-1",
+        "event": "Red Flag Warning",
+        "headline": "Red Flag Warning issued for Contra Costa County",
+        "description": "Southwest winds 15 to 25 mph with gusts up to 40 mph and relative humidity as low as 10 percent will produce extreme fire behavior.",
+        "instruction": "Avoid outdoor burning. Extreme caution with anything that can spark a wildfire.",
+        "sent": "2026-10-25T16:00:00-07:00",
+        "expires": "2026-10-25T20:00:00-07:00",
+        "senderName": "NWS San Francisco Bay Area CA",
+        "severity": "Severe",
+        "urgency": "Expected",
+        "areaDesc": "Contra Costa County"
+      }
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "features": [
+    {
+      "attributes": {
+        "IncidentName": "Morgan Fire",
+        "IncidentSize": 40,
+        "PercentContained": 0,
+        "FireDiscoveryDateTime": 1761393120000,
+        "ModifiedOnDateTime_dt": 1761400320000,
+        "UniqueFireIdentifier": "2026-CAEBD-000123",
+        "IrwinID": "{AAAA1111-BBBB-2222-CCCC-333344445555}",
+        "POOState": "US-CA",
+        "POOCounty": "Contra Costa",
+        "IncidentTypeCategory": "WF"
+      },
+      "geometry": { "x": -121.8353, "y": 37.8216 }
+    }
+  ]
+}

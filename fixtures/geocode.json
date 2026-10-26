@@ -1,0 +1,14 @@
+{
+  "danville": {
+    "lat": 37.8216,
+    "lon": -122.0001,
+    "matched_address": "1 Town Green, Danville, CA, 94526",
+    "source": "fixture"
+  },
+  "default": {
+    "lat": 37.8216,
+    "lon": -122.0001,
+    "matched_address": "1 Town Green, Danville, CA, 94526",
+    "source": "fixture"
+  }
+}

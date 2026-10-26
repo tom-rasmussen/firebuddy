@@ -1,0 +1,8 @@
+{
+  "properties": {
+    "timestamp": "2026-10-25T16:30:00+00:00",
+    "windDirection": { "value": 90 },
+    "windSpeed": { "value": 22.5 },
+    "windGust": { "value": 40.2 }
+  }
+}
