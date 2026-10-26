@@ -13,6 +13,31 @@ ONBOARDING_GREETING = (
     "(Reply STOP to opt out. I supplement, not replace, official alerts.)"
 )
 
+GEOCODE_RETRY_TEXT = "I couldn't find '{address}'. Try a more specific address, or the nearest town and state."
+
+STOPPED_TEXT = "You're opted out. I won't text you anymore. Reply START to resume."
+STARTED_TEXT = "You're back in. I'll text you if anything changes near your places."
+
+NO_PLACES_TEXT = "You're not watching any places yet. Text ADD <address> to add one."
+
+AGENT_UNAVAILABLE_TEXT = (
+    "I can't answer open-ended questions right now. Try ADD <address>, LIST, REMOVE <n>, "
+    "RADIUS <mi> [place n], STATUS, STOP, START, or HELP."
+)
+
+HELP_TEXT = (
+    "Commands:\n"
+    "ADD <address> - watch a new place\n"
+    "LIST - show your watched places\n"
+    "REMOVE <n> - stop watching place n\n"
+    "RADIUS <mi> [place n] - change watch radius\n"
+    "STATUS - current fires/alerts for your places\n"
+    "STOP - opt out\n"
+    "START - opt back in\n"
+    "HELP - this message\n"
+    "Anything else (e.g. \"should I leave?\") goes to FireBuddy."
+)
+
 
 def format_time(iso_str: str | None) -> str:
     if not iso_str:

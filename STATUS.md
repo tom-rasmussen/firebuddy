@@ -32,6 +32,24 @@
   message; blocked safety/route phrases are only allowed verbatim-quoted from a tool result)
   with one retry then a deterministic status-template fallback; `agent_traces` logging via
   `db.log_trace`. `traces.py` CLI (`python -m firebuddy.traces --last N`).
+- **Phase 5 — Router, Twilio webhook, simulator.** `router.py`: deterministic commands
+  (ADD/LIST/REMOVE/RADIUS/STATUS/STOP/START/HELP, case-insensitive), an onboarding state
+  machine on `users.state` (greet → capture address → geocode → confirm), STOP/START
+  gating only free-form text (deterministic commands still work while opted out), and a
+  graceful `AGENT_UNAVAILABLE_TEXT` fallback for free-form questions when no
+  `ANTHROPIC_API_KEY`/LLM client is available. `sms.py`: `send()` (real Twilio only when
+  `DRY_RUN=false` AND the recipient is in `SMS_ALLOWLIST`, dry-run console+outbox
+  otherwise; a failed real send is caught and logged, never raised) and
+  `verify_twilio_signature()`. `app.py`: FastAPI `POST /sms` (Twilio-signature-verified
+  unless `DRY_RUN`), `GET /health`, and a lifespan-managed background task running
+  `monitor.run_once()` every `MONITOR_INTERVAL_SEC`. `sim.py`: a console simulator that
+  monkeypatches the fires/NWS/shelters clients to an in-memory world controlled by
+  `:fire/:grow/:contain/:nws/:clearnws/:wind/:shelter/:tick/:advance <hrs>`, so the full
+  onboarding → watch → alert → status → opt-out flow can be demoed with zero live
+  dependencies except geocoding (left live and free). Added `python-multipart` to
+  `requirements.txt` — FastAPI's `Form(...)` parsing requires it even for Twilio's
+  URL-encoded webhook body; not a design deviation, just a missing transitive dependency
+  caught by actually running the endpoint.
 
 ## Verified live
 - Geocoding: Census for `3301 Camino Tassajara, Danville, CA` → `(37.799428, -121.924274)`.
@@ -65,6 +83,21 @@
   scripted `FakeLLMClient`: a plain tool-then-answer turn, a hallucinated-number reply that
   the validator catches and a retry recovers, a hallucinated reply that fails twice and falls
   back to the deterministic status template, and a run that hits the 6-tool-iteration cap.
+- `sim.py` run end-to-end from a scripted stdin transcript (41 unit/integration tests for
+  Phase 5 across `test_router.py`, `test_sms.py`, `test_app.py`, `test_sim.py` cover the
+  pieces individually; this is the full-stack live run): "hi" → onboarding greeting →
+  real Census-geocoded address ("123 Main St" fuzz-matched to the live TIGER-matched
+  3301 Camino Tassajara) → confirmed watch; `ADD` a second real place; `LIST`/`STATUS`;
+  `:fire`/`:wind`/`:nws redflag` then two `:tick`s — exactly one new-fire alert and one
+  verbatim Red-Flag alert per place on the first tick, **zero** on the repeat (dedupe
+  confirmed live through the real `monitor.run_once()` + `sent_alerts` table, not a mock);
+  `:grow` past 100 ac → exactly one growth alert; `:contain` → exactly one containment
+  alert; `:shelter ... open` + `STATUS` shows it; a free-form "should I leave?" correctly
+  falls back to `AGENT_UNAVAILABLE_TEXT` (no API key); `:advance 3` moves the clock and
+  ticks again; `STOP` silences free-form text but `LIST` still works; `START` reactivates;
+  `HELP` lists commands. Found and fixed two sim-only parsing bugs while running this
+  (multi-word shelter names, multi-word NWS event aliases) — real bugs, not flaky tests;
+  fixed and covered them in `test_sim.py` before moving on.
 
 ## Deviations
 - None from section 2/7 design rules. Added `scripts/verify_phase1.py` (not in the file list
@@ -79,10 +112,14 @@
   via `run_turn` + `FakeLLMClient` tests; once a key is set, re-run with
   `agent.AnthropicLLMClient()` to confirm against the live model and append the transcript
   here. Model: `claude-sonnet-5-5` per `ANTHROPIC_MODEL`.
-- **Phase 5 real SMS — needs Twilio credentials** (`TWILIO_ACCOUNT_SID`,
-  `TWILIO_AUTH_TOKEN`, `TWILIO_FROM_NUMBER`, `PUBLIC_BASE_URL`/ngrok). Will build router +
-  webhook + simulator fully against a console/stub SMS backend and mark the real round-trip
-  blocked, per section 0.
+- **Phase 5 real SMS round-trip — needs Twilio credentials** (`TWILIO_ACCOUNT_SID`,
+  `TWILIO_AUTH_TOKEN`, `TWILIO_FROM_NUMBER`, `PUBLIC_BASE_URL`/ngrok). Router, webhook, and
+  simulator are fully built and tested against the console/dry-run SMS backend (see above);
+  what's missing is an actual text round-tripping through Twilio to Tom's phone. To finish:
+  set the four Twilio env vars in `.env`, run `ngrok http 8000`, set `PUBLIC_BASE_URL` to
+  the ngrok URL, point the Twilio number's webhook at `<PUBLIC_BASE_URL>/sms`, add Tom's
+  number to `SMS_ALLOWLIST`, set `DRY_RUN=false`, then `uvicorn firebuddy.app:app --reload`
+  and text the Twilio number.
 
 ## Next
-- Phase 5: router + Twilio webhook + simulator.
+- Phase 6: evals + README.
