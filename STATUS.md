@@ -39,6 +39,36 @@ scenarios PLAN.md asks for, then the full eval suite.
      regression test (`test_geocode_fixture_diablo_is_distinct_from_default`).
 - 157 tests total (2 new), all green; `ruff` clean.
 
+## Re-verification + cost report — done
+Re-ran both live checks end to end after the fixes above, this time capturing
+token usage so cost is a real number, not an estimate from the plan.
+
+- **Pricing confirmed live**, not assumed: `ANTHROPIC_MODEL` defaults to
+  `claude-sonnet-5-5`, a real, current model (confirmed against
+  platform.claude.com/docs — it's simply newer than this model generation's
+  local pricing cache, which only went up to plain "Sonnet 5"). List price:
+  **$2.00 / MTok input, $10.00 / MTok output** (cheaper than base Sonnet 5's
+  $3/$15 — this looks like an introductory or point-release rate). 1M context,
+  128K max output, adaptive thinking on by default.
+- **`python -m evals.run_evals`: 10/10 scenarios passed again, 0 ungrounded
+  turns.** Extended `evals/runner.py` to sum each turn's `input_tokens`/
+  `output_tokens` from its trace row (already captured by `db.log_trace`,
+  just not previously surfaced) and `run_evals.py` to report the total and
+  its dollar cost at the confirmed rate above — **70,613 input / 6,229 output
+  tokens → $0.2035** for the whole 10-scenario, 11-turn suite.
+- **`sim.py`'s 5 scenarios, re-run with a persistent DB** (a one-off script,
+  not a change to `sim.py` itself — `sim.py` keeps its in-memory db for demo
+  isolation) so the traces could be read back afterward: all five produced
+  correct, fully-grounded replies — right guidance level, correct wind
+  relation, honest "no shelters found" messaging, a genuinely distinct
+  "Parents" place, and a scheduled 2-hour follow-up. **46,155 input / 3,940
+  output tokens → $0.1317.**
+- **Combined total: 116,768 input + 10,169 output tokens = $0.3352** for every
+  live-model call made while verifying this build (eval suite + sim
+  conversations). Well within PLAN.md section 10's ~$0-3 tonight estimate.
+- 157 tests still green (no new tests needed — `runner.py`'s token capture is
+  additive to existing fields, not new behavior to test); `ruff` clean.
+
 ## Post-MVP polish (from Tom's own sim run)
 - **Local time instead of UTC.** `nws.get_timezone(lat, lon)` reads `properties.timeZone`
   off the already-cached NWS `/points` lookup (falls back to `DEFAULT_TIMEZONE =

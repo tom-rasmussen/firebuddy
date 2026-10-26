@@ -51,6 +51,7 @@ def run_scenario(scenario: dict, llm_client_factory, budget: TurnBudget) -> dict
     originals = _install_world(scenario["world"])
     try:
         tool_calls, final_texts, validator_results = [], [], []
+        input_tokens = output_tokens = 0
         for turn_text in scenario["turns"]:
             budget.take(1)
             llm_client = llm_client_factory()
@@ -59,6 +60,8 @@ def run_scenario(scenario: dict, llm_client_factory, budget: TurnBudget) -> dict
             trace = db.last_traces(conn, 1)[0]
             validator_results.append(trace["validator_result"])
             tool_calls.extend(json.loads(trace["tool_calls"]))
+            input_tokens += trace["input_tokens"] or 0
+            output_tokens += trace["output_tokens"] or 0
 
         ctx = {
             "tool_calls": tool_calls,
@@ -70,7 +73,8 @@ def run_scenario(scenario: dict, llm_client_factory, budget: TurnBudget) -> dict
         }
         passed, reason = scenario["check"](ctx)
         return {"id": scenario["id"], "title": scenario["title"], "passed": passed, "reason": reason,
-                "final_texts": final_texts, "validator_results": validator_results}
+                "final_texts": final_texts, "validator_results": validator_results,
+                "input_tokens": input_tokens, "output_tokens": output_tokens}
     finally:
         _restore_world(originals)
         conn.close()
@@ -94,6 +98,7 @@ def run_all(scenarios: list[dict], llm_client_factory) -> list[dict]:
             results.append(run_scenario(scenario, llm_client_factory, budget))
         except TurnBudgetExceeded as exc:
             results.append({"id": scenario["id"], "title": scenario["title"], "passed": False,
-                             "reason": str(exc), "final_texts": [], "validator_results": []})
+                             "reason": str(exc), "final_texts": [], "validator_results": [],
+                             "input_tokens": 0, "output_tokens": 0})
             break
     return results

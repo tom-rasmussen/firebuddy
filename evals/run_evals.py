@@ -10,6 +10,12 @@ from evals.runner import run_all
 from evals.scenarios import SCENARIOS
 from firebuddy import config
 
+# claude-sonnet-5-5 list pricing per MTok, confirmed live 2026-10-26 against
+# platform.claude.com/docs/en/about-claude/models/overview (newer than this
+# model's absence from any locally cached pricing table).
+INPUT_COST_PER_MTOK = 2.00
+OUTPUT_COST_PER_MTOK = 10.00
+
 
 def main() -> int:
     if not config.ANTHROPIC_API_KEY:
@@ -30,6 +36,12 @@ def main() -> int:
             print(f"        reason: {r['reason']}")
     ungrounded = sum(1 for r in results for v in r["validator_results"] if not v.startswith("ok"))
     print(f"\nungrounded/failed-validator turns across all scenarios: {ungrounded}")
+
+    total_input = sum(r.get("input_tokens", 0) for r in results)
+    total_output = sum(r.get("output_tokens", 0) for r in results)
+    cost = (total_input / 1_000_000) * INPUT_COST_PER_MTOK + (total_output / 1_000_000) * OUTPUT_COST_PER_MTOK
+    print(f"tokens: {total_input} in / {total_output} out ({config.ANTHROPIC_MODEL})")
+    print(f"estimated cost: ${cost:.4f}")
     return 0 if passed == len(results) else 1
 
 
