@@ -89,7 +89,9 @@ def _handle_status(conn, user) -> str:
     for p in places:
         fires = fires_source.fires_near(p["lat"], p["lon"], p["radius_mi"])
         alerts = nws_source.official_alerts(p["lat"], p["lon"])
-        parts.append(templates.status_update(p["label"], fires, alerts))
+        wind = agent.wind_for_place(p)
+        tz_name = nws_source.get_timezone(p["lat"], p["lon"])
+        parts.append(templates.status_update(p["label"], fires, alerts, wind, tz_name))
     return "\n\n".join(parts)
 
 

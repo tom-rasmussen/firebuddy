@@ -98,6 +98,14 @@ def test_status_uses_fixture_data(conn):
     assert "Morgan Fire" in reply
 
 
+def test_status_includes_wind_line(conn):
+    phone = "+15551110009"
+    router.route_message(conn, phone, "ADD 123 Main St, Danville, CA")
+    reply = router.route_message(conn, phone, "STATUS")
+    assert "Wind:" in reply
+    assert "blowing from Morgan Fire toward you" in reply
+
+
 def test_help_lists_commands(conn):
     reply = router.route_message(conn, "+15551110004", "HELP")
     assert "ADD <address>" in reply

@@ -42,11 +42,27 @@ def sent_texts(monkeypatch, fire_sequence=None, alert_sequence=None):
     def fake_alerts(lat, lon):
         return alert_sequence or []
 
+    def fake_wind_data(lat, lon):
+        return {
+            "station_id": "TEST",
+            "station_distance_mi": 1.0,
+            "obs_time": "2026-10-25T15:00:00+00:00",
+            "wind_from_deg": 270,
+            "wind_speed_mph": 8,
+            "wind_gust_mph": 12,
+            "forecast_hourly": [],
+        }
+
+    def fake_get_timezone(lat, lon):
+        return "America/Los_Angeles"
+
     def fake_send(phone, text):
         calls.append((phone, text))
 
     monkeypatch.setattr(fires_source, "fires_near", fake_fires)
     monkeypatch.setattr(nws_source, "official_alerts", fake_alerts)
+    monkeypatch.setattr(nws_source, "wind_data", fake_wind_data)
+    monkeypatch.setattr(nws_source, "get_timezone", fake_get_timezone)
     return calls, fake_send
 
 
@@ -148,5 +164,33 @@ def test_due_followup_sends_status_template(conn, place, monkeypatch):
     monitor.run_once(conn, send_fn)
     assert len(calls) == 1
     assert "Status check for Home" in calls[0][1]
+    assert "Wind: from W at 8 mph" in calls[0][1]
     due = db.due_followups(conn)
     assert len(due) == 0
+
+
+def test_new_fire_alert_shows_local_time_not_utc(conn, place, monkeypatch):
+    calls, send_fn = sent_texts(monkeypatch, fire_sequence=[make_fire(40, 0)])
+    monitor.run_once(conn, send_fn)
+    assert "(UTC)" not in calls[0][1]
+    assert "PDT" in calls[0][1] or "PST" in calls[0][1]
+
+
+def test_official_alert_text_dedupes_identical_headline_and_body(conn, place, monkeypatch):
+    alert = {
+        "id": "urn:oid:redflag-dup",
+        "event": "Red Flag Warning",
+        "headline": "Red Flag Warning issued for Contra Costa County",
+        "description": "Red Flag Warning issued for Contra Costa County",
+        "instruction": "Red Flag Warning issued for Contra Costa County",
+        "sent": "2026-10-25T16:00:00-07:00",
+        "expires": "2026-10-25T20:00:00-07:00",
+        "sender_name": "NWS Bay Area",
+        "severity": "Severe",
+        "urgency": "Expected",
+        "area_desc": "Contra Costa County",
+    }
+    calls, send_fn = sent_texts(monkeypatch, alert_sequence=[alert])
+    monitor.run_once(conn, send_fn)
+    assert len(calls) == 1
+    assert calls[0][1].count("Red Flag Warning issued for Contra Costa County") == 1

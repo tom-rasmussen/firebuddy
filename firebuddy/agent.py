@@ -193,6 +193,18 @@ def _resolve_fire_and_bearing(place, incident_name: str | None):
     return target, target["bearing_deg"]
 
 
+def wind_for_place(place, incident_name: str | None = None) -> dict:
+    """Current wind for a place, related to the named (or nearest) fire if any.
+    Shared by the wind_check/assess_situation tools, the monitor's followup digest,
+    and the router's STATUS command."""
+    wind = nws_source.wind_data(place["lat"], place["lon"])
+    target_fire, bearing = _resolve_fire_and_bearing(place, incident_name)
+    result = assess.wind_check(wind, bearing, now=clock.now())
+    if target_fire:
+        result["relative_to_fire"] = target_fire["name"]
+    return result
+
+
 def _tool_list_places(conn, user_id, _input):
     places = db.list_places(conn, user_id)
     return {
@@ -267,12 +279,8 @@ def _tool_wind_check(conn, user_id, input):
     place = _owned_place(conn, user_id, input.get("place_id"))
     if place is None:
         return {"error": "Place not found."}
-    wind = nws_source.wind_data(place["lat"], place["lon"])
-    target_fire, bearing = _resolve_fire_and_bearing(place, input.get("incident_name"))
-    result = assess.wind_check(wind, bearing, now=clock.now())
+    result = wind_for_place(place, input.get("incident_name"))
     result["place_label"] = place["label"]
-    if target_fire:
-        result["relative_to_fire"] = target_fire["name"]
     return result
 
 
@@ -282,12 +290,7 @@ def _tool_assess_situation(conn, user_id, input):
         return {"error": "Place not found."}
     incidents = fires_source.fires_near(place["lat"], place["lon"], place["radius_mi"])
     alerts = nws_source.official_alerts(place["lat"], place["lon"])
-    relation = None
-    if incidents:
-        wind = nws_source.wind_data(place["lat"], place["lon"])
-        _, bearing = _resolve_fire_and_bearing(place, None)
-        if bearing is not None:
-            relation = assess.wind_relation(wind.get("wind_from_deg"), wind.get("wind_speed_mph"), bearing)
+    relation = wind_for_place(place).get("relation_to_fire") if incidents else None
     result = assess.assess_situation(incidents, alerts, wind_relation_to_nearest_fire=relation)
     result["place_label"] = place["label"]
     result["incidents"] = incidents

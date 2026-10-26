@@ -47,3 +47,7 @@ def test_find_shelters_fixture_filters_closed():
     result = shelters.find_shelters(HOME_LAT, HOME_LON, max_results=3)
     assert len(result) == 1
     assert result[0]["name"] == "Monte Vista HS Gym"
+
+
+def test_get_timezone_fixture_mode_returns_default():
+    assert nws.get_timezone(HOME_LAT, HOME_LON) == nws.DEFAULT_TIMEZONE

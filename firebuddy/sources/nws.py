@@ -5,6 +5,7 @@ ALERTS_URL = "https://api.weather.gov/alerts/active"
 POINTS_URL = "https://api.weather.gov/points/{lat},{lon}"
 
 KMH_TO_MPH = 0.621371
+DEFAULT_TIMEZONE = "America/Los_Angeles"
 
 _points_cache = TTLCache()
 _alerts_cache = TTLCache()
@@ -59,9 +60,24 @@ def _get_points(client, lat: float, lon: float) -> dict:
     result = {
         "forecast_hourly_url": props["forecastHourly"],
         "observation_stations_url": props["observationStations"],
+        "timezone": props.get("timeZone") or DEFAULT_TIMEZONE,
     }
     _points_cache.set(cache_key, result)
     return result
+
+
+def get_timezone(lat: float, lon: float) -> str:
+    """The place's IANA timezone (e.g. 'America/Los_Angeles'), per NWS /points,
+    cached alongside the rest of that endpoint's response. Falls back to
+    DEFAULT_TIMEZONE in fixture mode or if the lookup fails."""
+    if config.fixtures_enabled():
+        return DEFAULT_TIMEZONE
+    try:
+        with http_client() as client:
+            points = _get_points(client, lat, lon)
+        return points.get("timezone") or DEFAULT_TIMEZONE
+    except Exception:
+        return DEFAULT_TIMEZONE
 
 
 def _nearest_station(client, observation_stations_url: str, lat: float, lon: float) -> dict:

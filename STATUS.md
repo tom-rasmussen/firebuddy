@@ -1,5 +1,34 @@
 # FireBuddy build status
 
+## Post-MVP polish (from Tom's own sim run)
+- **Local time instead of UTC.** `nws.get_timezone(lat, lon)` reads `properties.timeZone`
+  off the already-cached NWS `/points` lookup (falls back to `DEFAULT_TIMEZONE =
+  "America/Los_Angeles"` in fixture mode, on a missing field, or on any lookup error).
+  `templates.format_time()` now converts to that zone and renders a real abbreviation
+  ("11:48 PM PDT") via `zoneinfo` instead of "6:48 AM (UTC)". Added `tzdata` to
+  `requirements.txt` so this doesn't depend on the host OS having a timezone database.
+  `monitor.py` and `router.py` fetch the place's timezone once and thread it through
+  every templated message.
+- **No more duplicated alert text.** `official_alert_text()` now only prints the
+  instruction/description line when it differs from the headline, instead of printing
+  near-identical text twice (every NWS alert whose fields happen to be short enough to
+  reuse the headline as the instruction was hitting this).
+- **STATUS includes a wind line.** Extracted `agent.wind_for_place()` (previously
+  duplicated inline in the `wind_check`/`assess_situation` tools) as the one shared
+  place that fetches wind + resolves it against the nearest/named fire; `monitor.py`'s
+  followup digest and `router.py`'s `STATUS` command now both call it and pass the
+  result to a new `templates.wind_line()` ("Wind: from E at 14 mph (gusts 25), blowing
+  from Morgan toward you (SIM obs, 11:48 PM PDT)."), flagging staleness when present.
+- Caught and fixed a regression these changes introduced in `tests/test_monitor.py`:
+  the new wind/timezone calls weren't mocked, so that test file would have made live
+  NWS calls (works, since this sandbox has network access, but violates "never loop
+  live calls in tests"). Fixed by extending its `sent_texts()` helper to fake
+  `wind_data`/`get_timezone` like it already did for `fires_near`/`official_alerts`.
+- 20 new/updated tests (`test_templates.py`, `test_nws_timezone.py`, plus additions to
+  `test_monitor.py`/`test_router.py`/`test_sources_fixtures.py`): 155 total, all green;
+  `ruff` clean. Re-ran the full `sim.py` demo transcript end to end to confirm all
+  three fixes live in actual output (see commit for the transcript).
+
 ## Done
 - **Phase 1 — DB, geo math, data clients.** `config.py`, `db.py` (SQLite schema + helpers,
   dedupe via unique `sent_alerts(place_id, key)`), `geo.py` (haversine, bearing, 16-pt
