@@ -5,6 +5,14 @@
   dedupe via unique `sent_alerts(place_id, key)`), `geo.py` (haversine, bearing, 16-pt
   compass, angular diff), `clock.py` (overridable `now()`), `sources/{geocode,fires,nws,shelters}.py`
   with live + fixture modes.
+- **Phase 2 — Monitor, templates, dedupe.** `templates.py` (all deterministic message text:
+  onboarding, new-fire, growth, containment, verbatim NWS alert with 480-char truncation,
+  followup status digest). `monitor.py` `run_once(conn, send_fn)`: per active place, checks
+  new fires, growth-threshold crossings (100/1k/10k/100k ac), containment, watched NWS
+  alert types verbatim, and due follow-ups. Dedupe is solely via `sent_alerts` unique
+  `(place_id, key)`; `incident_state.alerted_thresholds` tracks which growth thresholds a
+  fire has already crossed so a newly-discovered fire that's already past a threshold
+  doesn't immediately double-alert alongside its new-fire message.
 
 ## Verified live
 - Geocoding: Census for `3301 Camino Tassajara, Danville, CA` → `(37.799428, -121.924274)`.
@@ -17,6 +25,12 @@
 - Shelters (FEMA NSS): query succeeds, 0 open shelters within 50 mi right now (no active
   disaster near Danville, as expected).
 - Run `python scripts/verify_phase1.py` (with venv active) to re-check.
+- `monitor.run_once()` run end-to-end against a real in-memory DB and the live fires/NWS
+  clients for the Danville address: completes cleanly, 0 alerts sent (nothing active to
+  alert on right now). Trigger/dedupe logic itself is covered by 9 unit tests with
+  mocked source data (new fire → 1 alert; repeat → 0; growth threshold → 1; containment →
+  1; NWS watched-event verbatim → 1 incl. exact instruction text; unwatched NWS event →
+  0; due follow-up → status template + marked done).
 
 ## Deviations
 - None from section 2/7 design rules. Added `scripts/verify_phase1.py` (not in the file list
@@ -29,4 +43,4 @@
   there, per section 0.
 
 ## Next
-- Phase 2: monitor loop, templates, dedupe.
+- Phase 3: `assess_situation` + `wind_check`.
