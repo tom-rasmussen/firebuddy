@@ -135,7 +135,7 @@ def wind_line(wind: dict, tz_name: str | None = None) -> str:
     direction_deg = wind.get("wind_from_deg")
     speed = wind.get("wind_speed_mph")
     if direction_deg is None or speed is None:
-        return "Wind: observation unavailable."
+        return _partial_wind_line(wind, tz_name)
     direction = geo.compass_16(direction_deg)
     speed_bit = f"from {direction} at {speed:g} mph"
     gust = wind.get("wind_gust_mph")
@@ -153,6 +153,25 @@ def wind_line(wind: dict, tz_name: str | None = None) -> str:
     time_bit = format_time(wind.get("obs_time"), tz_name)
     stale_bit = " -- stale" if wind.get("stale") else ""
     return f"Wind: {speed_bit}{relation_bit} ({source} obs, {time_bit}{stale_bit})."
+
+
+def _partial_wind_line(wind: dict, tz_name: str | None = None) -> str:
+    """Stations often report a gust with no sustained speed or direction; use what's there,
+    plus the next hourly forecast period, before giving up."""
+    parts = []
+    gust = wind.get("wind_gust_mph")
+    if gust is not None:
+        source = wind.get("station_id") or "obs"
+        time_bit = format_time(wind.get("obs_time"), tz_name)
+        stale_bit = " -- stale" if wind.get("stale") else ""
+        parts.append(f"gusts {gust:g} mph, no steady reading ({source} obs, {time_bit}{stale_bit})")
+    forecast = next((p for p in wind.get("forecast_hourly") or [] if p.get("wind_speed")), None)
+    if forecast:
+        direction = f"{forecast['wind_direction']} " if forecast.get("wind_direction") else ""
+        parts.append(f"forecast {direction}{forecast['wind_speed']} from {format_time(forecast.get('start_time'), tz_name)}")
+    if not parts:
+        return "Wind: observation unavailable."
+    return f"Wind: {'; '.join(parts)}."
 
 
 def status_update(

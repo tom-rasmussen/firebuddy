@@ -225,6 +225,7 @@ def test_run_turn_grounding_retry_recovers(conn, user, place):
     trace = db.last_traces(conn, 1)[0]
     assert trace["retries"] == 1
     assert trace["validator_result"].startswith("ok")
+    assert "first attempt: ungrounded number: 987654" in trace["validator_result"]
 
 
 def test_run_turn_double_failure_falls_back(conn, user, place):
@@ -239,7 +240,34 @@ def test_run_turn_double_failure_falls_back(conn, user, place):
     assert "couldn't verify a full answer" in reply
     trace = db.last_traces(conn, 1)[0]
     assert trace["retries"] == 1
-    assert trace["validator_result"].startswith("failed")
+    assert trace["validator_result"].startswith("failed: ungrounded number: 123456")
+    assert "first attempt: ungrounded number: 987654" in trace["validator_result"]
+
+
+def test_run_turn_numbers_from_earlier_user_messages_are_grounded(conn, user, place):
+    db.log_message(conn, user["id"], "in", "3301 Camino Tassajara, Danville, CA")
+    llm = agent.FakeLLMClient(
+        [
+            tool_msg("assess_situation", {"place_id": place["id"]}),
+            text_msg("The address you sent, 3301 Camino Tassajara, is 9.0 mi from Morgan Fire."),
+        ]
+    )
+    reply = agent.run_turn(conn, user, "is the wind blowing the fire toward me?", llm)
+    assert "3301" in reply
+    assert db.last_traces(conn, 1)[0]["retries"] == 0
+
+
+def test_run_turn_numbers_from_earlier_bot_replies_are_not_grounded(conn, user, place):
+    db.log_message(conn, user["id"], "out", "Morgan Fire grew to 777777 acres.")
+    llm = agent.FakeLLMClient(
+        [
+            tool_msg("assess_situation", {"place_id": place["id"]}),
+            text_msg("Morgan Fire is 777777 acres."),
+            text_msg("Morgan Fire is 9.0 mi E."),
+        ]
+    )
+    agent.run_turn(conn, user, "how big is it?", llm)
+    assert db.last_traces(conn, 1)[0]["retries"] == 1
 
 
 def test_run_turn_caps_tool_iterations(conn, user, place):

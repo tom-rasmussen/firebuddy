@@ -553,6 +553,9 @@ def run_turn(conn, user, user_text: str, llm_client) -> str:
     history = db.recent_messages(conn, user["id"], limit=12)
     system = build_system_prompt(places)
     messages = _history_to_messages(history) + [{"role": "user", "content": user_text}]
+    # Numbers the user typed earlier (e.g. a street number) are fair to repeat; the bot's own
+    # earlier replies are not, so stale facts like an old acreage still fail the check.
+    user_said = "\n".join([m["body"] for m in history if m["direction"] == "in"] + [user_text])
 
     tool_calls_trace: list[dict] = []
     grounding_parts: list[str] = []
@@ -572,7 +575,7 @@ def run_turn(conn, user, user_text: str, llm_client) -> str:
 
     final_text = _extract_text(response)
     grounding_blob = "\n".join(grounding_parts)
-    result = validate(final_text, grounding_blob, user_text)
+    result = validate(final_text, grounding_blob, user_said)
     retries = 0
 
     if not result.ok:
@@ -590,13 +593,15 @@ def run_turn(conn, user, user_text: str, llm_client) -> str:
         )
         grounding_blob = "\n".join(grounding_parts)
         retry_text = _extract_text(response)
-        retry_result = validate(retry_text, grounding_blob, user_text)
+        retry_result = validate(retry_text, grounding_blob, user_said)
+        first_reason = result.reason
         if retry_result.ok:
             final_text = retry_text
             result = retry_result
         else:
             final_text = _fallback_text(tool_calls_trace, places)
             result = retry_result
+        result = ValidatorResult(ok=result.ok, reason=f"{result.reason or ''} (first attempt: {first_reason})".strip())
 
     latency_ms = (time.monotonic() - start) * 1000
     db.log_message(conn, user["id"], "in", user_text)

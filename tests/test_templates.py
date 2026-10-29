@@ -112,6 +112,30 @@ def test_wind_line_missing_observation():
     assert templates.wind_line({"wind_from_deg": None, "wind_speed_mph": None}) == "Wind: observation unavailable."
 
 
+def test_wind_line_gust_only_observation():
+    wind = {
+        "wind_from_deg": None,
+        "wind_speed_mph": None,
+        "wind_gust_mph": 28,
+        "station_id": "KOVE",
+        "obs_time": "2026-10-26T06:48:00+00:00",
+    }
+    line = templates.wind_line(wind, "America/Los_Angeles")
+    assert line == "Wind: gusts 28 mph, no steady reading (KOVE obs, 11:48 PM PDT)."
+
+
+def test_wind_line_falls_back_to_forecast():
+    wind = {
+        "wind_from_deg": None,
+        "wind_speed_mph": None,
+        "forecast_hourly": [
+            {"start_time": "2026-10-26T14:00:00-07:00", "wind_speed": "0 to 3 mph", "wind_direction": "W"},
+        ],
+    }
+    line = templates.wind_line(wind, "America/Los_Angeles")
+    assert line == "Wind: forecast W 0 to 3 mph from 2:00 PM PDT."
+
+
 def test_status_update_includes_wind_line_when_provided():
     wind = {
         "wind_from_deg": 90,

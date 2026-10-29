@@ -1,5 +1,18 @@
 # FireBuddy build status
 
+## Testing without Twilio (2026-10-29)
+Ran the dry-run web app (`DRY_RUN=true`, fake texts posted to `/sms` with curl) against
+live data and the real model, plus scripted `sim.py` runs. Fixed two issues found:
+- **Grounding false positive on earlier user input.** The agent repeated the user's street
+  number ("3301") from an earlier message; the validator only accepted numbers from the
+  current message and tool results, so the reply was retried or fell back to the
+  template. Numbers from the user's own earlier messages now count as grounded (the bot's
+  earlier replies still don't, so stale facts still fail). Traces now also record the
+  first attempt's failure reason when a retry happens. 3/3 live reruns passed first try.
+- **STATUS said "Wind: observation unavailable"** when a station reported only a gust.
+  It now shows the gust and/or the next hourly forecast, and says "unavailable" only
+  when there's neither.
+
 ## Live model verification (ANTHROPIC_API_KEY now set) — done
 Ran the real `claude-sonnet-5-5` agent via `sim.py` for all five conversational
 scenarios PLAN.md asks for, then the full eval suite.
