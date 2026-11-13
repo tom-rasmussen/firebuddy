@@ -1,0 +1,1255 @@
+{
+  "geo": {
+    "pairs": [
+      {
+        "from": [
+          37.8216,
+          -122.0001
+        ],
+        "to": [
+          37.8216,
+          -121.8353
+        ],
+        "distance_mi": 8.994630598723793,
+        "distance_mi_r1": 9.0,
+        "bearing_deg": 89.94947189520292,
+        "bearing_deg_r1": 89.9,
+        "compass": "E"
+      },
+      {
+        "from": [
+          37.8216,
+          -122.0001
+        ],
+        "to": [
+          37.8183,
+          -121.9623
+        ],
+        "distance_mi": 2.0756964119301515,
+        "distance_mi_r1": 2.1,
+        "bearing_deg": 96.29494777193679,
+        "bearing_deg_r1": 96.3,
+        "compass": "E"
+      },
+      {
+        "from": [
+          37.8216,
+          -122.0001
+        ],
+        "to": [
+          37.95,
+          -122.05
+        ],
+        "distance_mi": 9.279614766354609,
+        "distance_mi_r1": 9.3,
+        "bearing_deg": 342.9634753890488,
+        "bearing_deg_r1": 343.0,
+        "compass": "NNW"
+      },
+      {
+        "from": [
+          37.8216,
+          -122.0001
+        ],
+        "to": [
+          37.7,
+          -122.1
+        ],
+        "distance_mi": 10.0184373530443,
+        "distance_mi_r1": 10.0,
+        "bearing_deg": 213.03404424919643,
+        "bearing_deg_r1": 213.0,
+        "compass": "SSW"
+      },
+      {
+        "from": [
+          37.8216,
+          -122.0001
+        ],
+        "to": [
+          37.8216,
+          -122.0001
+        ],
+        "distance_mi": 0.0,
+        "distance_mi_r1": 0.0,
+        "bearing_deg": 0.0,
+        "bearing_deg_r1": 0.0,
+        "compass": "N"
+      },
+      {
+        "from": [
+          37.8216,
+          -122.0001
+        ],
+        "to": [
+          38.5816,
+          -121.4944
+        ],
+        "distance_mi": 59.25675797197351,
+        "distance_mi_r1": 59.3,
+        "bearing_deg": 27.448728824565933,
+        "bearing_deg_r1": 27.4,
+        "compass": "NNE"
+      }
+    ],
+    "compass": {
+      "0": "N",
+      "11.24": "N",
+      "11.25": "N",
+      "22.5": "NNE",
+      "90": "E",
+      "180": "S",
+      "191.25": "S",
+      "348.75": "N",
+      "359.9": "N",
+      "360": "N",
+      "725": "N"
+    },
+    "angular_diff": [
+      [
+        0,
+        0,
+        0
+      ],
+      [
+        10,
+        350,
+        20
+      ],
+      [
+        350,
+        10,
+        20
+      ],
+      [
+        90,
+        270,
+        180
+      ],
+      [
+        45,
+        225.5,
+        179.5
+      ],
+      [
+        720,
+        30,
+        30
+      ]
+    ],
+    "round": [
+      [
+        0.25,
+        1,
+        0.2
+      ],
+      [
+        0.75,
+        1,
+        0.8
+      ],
+      [
+        1.25,
+        1,
+        1.2
+      ],
+      [
+        2.25,
+        1,
+        2.2
+      ],
+      [
+        2.35,
+        1,
+        2.4
+      ],
+      [
+        0.15,
+        1,
+        0.1
+      ],
+      [
+        9.05,
+        1,
+        9.1
+      ],
+      [
+        8.95,
+        1,
+        8.9
+      ],
+      [
+        12.5,
+        1,
+        12.5
+      ],
+      [
+        3.14159,
+        1,
+        3.1
+      ]
+    ]
+  },
+  "assess": {
+    "now": "2026-10-25T17:00:00-07:00",
+    "wind_relation": [
+      [
+        90,
+        14,
+        90,
+        "toward"
+      ],
+      [
+        90,
+        14,
+        135,
+        "toward"
+      ],
+      [
+        90,
+        14,
+        136,
+        "crosswind"
+      ],
+      [
+        90,
+        14,
+        170,
+        "crosswind"
+      ],
+      [
+        90,
+        14,
+        180,
+        "crosswind"
+      ],
+      [
+        90,
+        14,
+        181,
+        "away"
+      ],
+      [
+        90,
+        14,
+        260,
+        "away"
+      ],
+      [
+        90,
+        3,
+        90,
+        "light_variable"
+      ],
+      [
+        90,
+        5,
+        90,
+        "toward"
+      ],
+      [
+        null,
+        14,
+        90,
+        "unknown"
+      ],
+      [
+        90,
+        null,
+        90,
+        "unknown"
+      ],
+      [
+        350,
+        20,
+        10,
+        "toward"
+      ]
+    ],
+    "stale": [
+      [
+        null,
+        true
+      ],
+      [
+        "2026-10-25T16:30:00-07:00",
+        false
+      ],
+      [
+        "2026-10-25T15:00:00-07:00",
+        false
+      ],
+      [
+        "2026-10-25T14:59:00-07:00",
+        true
+      ],
+      [
+        "2026-10-25T23:00:00Z",
+        false
+      ]
+    ],
+    "situations": {
+      "nothing": {
+        "input": {
+          "fires": [],
+          "alerts": [],
+          "wind_relation": null,
+          "user_reports_evac_order": false
+        },
+        "output": {
+          "level": "MONITOR",
+          "guidance": "Nothing nearby right now. I'll text you if that changes.",
+          "facts": []
+        }
+      },
+      "far_fire_wind_away": {
+        "input": {
+          "fires": [
+            {
+              "key": "key-Morgan Fire",
+              "name": "Morgan Fire",
+              "acres": 40,
+              "percent_contained": 0,
+              "distance_mi": 9.0,
+              "direction": "E",
+              "bearing_deg": 90.0,
+              "discovered": "2026-10-25T15:52:00-07:00",
+              "updated": "2026-10-25T16:12:00-07:00",
+              "source": "NIFC"
+            }
+          ],
+          "alerts": [],
+          "wind_relation": "away",
+          "user_reports_evac_order": false
+        },
+        "output": {
+          "level": "BE READY",
+          "guidance": "Pack a go-bag, know your zone and two ways out.",
+          "facts": [
+            "Morgan Fire is 9.0 mi away, wind not toward you."
+          ]
+        }
+      },
+      "far_fire_wind_unknown": {
+        "input": {
+          "fires": [
+            {
+              "key": "key-Morgan Fire",
+              "name": "Morgan Fire",
+              "acres": 40,
+              "percent_contained": 0,
+              "distance_mi": 9.0,
+              "direction": "E",
+              "bearing_deg": 90.0,
+              "discovered": "2026-10-25T15:52:00-07:00",
+              "updated": "2026-10-25T16:12:00-07:00",
+              "source": "NIFC"
+            }
+          ],
+          "alerts": [],
+          "wind_relation": null,
+          "user_reports_evac_order": false
+        },
+        "output": {
+          "level": "BE READY",
+          "guidance": "Pack a go-bag, know your zone and two ways out.",
+          "facts": [
+            "Morgan Fire is 9.0 mi away, wind not toward you."
+          ]
+        }
+      },
+      "far_fire_wind_toward": {
+        "input": {
+          "fires": [
+            {
+              "key": "key-Morgan Fire",
+              "name": "Morgan Fire",
+              "acres": 40,
+              "percent_contained": 0,
+              "distance_mi": 9.0,
+              "direction": "E",
+              "bearing_deg": 90.0,
+              "discovered": "2026-10-25T15:52:00-07:00",
+              "updated": "2026-10-25T16:12:00-07:00",
+              "source": "NIFC"
+            }
+          ],
+          "alerts": [],
+          "wind_relation": "toward",
+          "user_reports_evac_order": false
+        },
+        "output": {
+          "level": "GET READY: LEAVE EARLY IF YOU NEED TIME",
+          "guidance": "Leave now if you have kids, pets, livestock, or mobility needs, or if you feel unsafe.",
+          "facts": [
+            "Wind is blowing from the fire toward you."
+          ]
+        }
+      },
+      "near_fire": {
+        "input": {
+          "fires": [
+            {
+              "key": "key-Morgan Fire",
+              "name": "Morgan Fire",
+              "acres": 40,
+              "percent_contained": 0,
+              "distance_mi": 3.2,
+              "direction": "E",
+              "bearing_deg": 90.0,
+              "discovered": "2026-10-25T15:52:00-07:00",
+              "updated": "2026-10-25T16:12:00-07:00",
+              "source": "NIFC"
+            }
+          ],
+          "alerts": [],
+          "wind_relation": "away",
+          "user_reports_evac_order": false
+        },
+        "output": {
+          "level": "GET READY: LEAVE EARLY IF YOU NEED TIME",
+          "guidance": "Leave now if you have kids, pets, livestock, or mobility needs, or if you feel unsafe.",
+          "facts": [
+            "Morgan Fire is 3.2 mi away."
+          ]
+        }
+      },
+      "two_fires_nearest_first": {
+        "input": {
+          "fires": [
+            {
+              "key": "key-Ridge Fire",
+              "name": "Ridge Fire",
+              "acres": 40,
+              "percent_contained": 0,
+              "distance_mi": 12.4,
+              "direction": "SSW",
+              "bearing_deg": 200.0,
+              "discovered": "2026-10-25T15:52:00-07:00",
+              "updated": "2026-10-25T16:12:00-07:00",
+              "source": "NIFC"
+            },
+            {
+              "key": "key-Morgan Fire",
+              "name": "Morgan Fire",
+              "acres": 40,
+              "percent_contained": 0,
+              "distance_mi": 9.0,
+              "direction": "E",
+              "bearing_deg": 90.0,
+              "discovered": "2026-10-25T15:52:00-07:00",
+              "updated": "2026-10-25T16:12:00-07:00",
+              "source": "NIFC"
+            }
+          ],
+          "alerts": [],
+          "wind_relation": "crosswind",
+          "user_reports_evac_order": false
+        },
+        "output": {
+          "level": "BE READY",
+          "guidance": "Pack a go-bag, know your zone and two ways out.",
+          "facts": [
+            "Morgan Fire is 9.0 mi away, wind not toward you."
+          ]
+        }
+      },
+      "red_flag_no_fire": {
+        "input": {
+          "fires": [],
+          "alerts": [
+            {
+              "id": "urn:Red Flag Warning",
+              "event": "Red Flag Warning",
+              "headline": "Red Flag Warning issued for Contra Costa County",
+              "description": "Description text.",
+              "instruction": "Avoid outdoor burning.",
+              "sent": "2026-10-25T16:00:00-07:00",
+              "expires": "2026-10-25T20:00:00-07:00",
+              "sender_name": "NWS San Francisco Bay Area CA",
+              "severity": "Severe",
+              "urgency": "Expected",
+              "area_desc": "Contra Costa County"
+            }
+          ],
+          "wind_relation": null,
+          "user_reports_evac_order": false
+        },
+        "output": {
+          "level": "BE READY",
+          "guidance": "Pack a go-bag, know your zone and two ways out.",
+          "facts": [
+            "Red Flag Warning is in effect."
+          ]
+        }
+      },
+      "red_flag_with_far_fire": {
+        "input": {
+          "fires": [
+            {
+              "key": "key-Morgan Fire",
+              "name": "Morgan Fire",
+              "acres": 40,
+              "percent_contained": 0,
+              "distance_mi": 9.0,
+              "direction": "E",
+              "bearing_deg": 90.0,
+              "discovered": "2026-10-25T15:52:00-07:00",
+              "updated": "2026-10-25T16:12:00-07:00",
+              "source": "NIFC"
+            }
+          ],
+          "alerts": [
+            {
+              "id": "urn:Red Flag Warning",
+              "event": "Red Flag Warning",
+              "headline": "Red Flag Warning issued for Contra Costa County",
+              "description": "Description text.",
+              "instruction": "Avoid outdoor burning.",
+              "sent": "2026-10-25T16:00:00-07:00",
+              "expires": "2026-10-25T20:00:00-07:00",
+              "sender_name": "NWS San Francisco Bay Area CA",
+              "severity": "Severe",
+              "urgency": "Expected",
+              "area_desc": "Contra Costa County"
+            }
+          ],
+          "wind_relation": "away",
+          "user_reports_evac_order": false
+        },
+        "output": {
+          "level": "GET READY: LEAVE EARLY IF YOU NEED TIME",
+          "guidance": "Leave now if you have kids, pets, livestock, or mobility needs, or if you feel unsafe.",
+          "facts": [
+            "Red Flag Warning is in effect."
+          ]
+        }
+      },
+      "evac_order": {
+        "input": {
+          "fires": [
+            {
+              "key": "key-Morgan Fire",
+              "name": "Morgan Fire",
+              "acres": 40,
+              "percent_contained": 0,
+              "distance_mi": 9.0,
+              "direction": "E",
+              "bearing_deg": 90.0,
+              "discovered": "2026-10-25T15:52:00-07:00",
+              "updated": "2026-10-25T16:12:00-07:00",
+              "source": "NIFC"
+            }
+          ],
+          "alerts": [
+            {
+              "id": "urn:Red Flag Warning",
+              "event": "Red Flag Warning",
+              "headline": "Red Flag Warning issued for Contra Costa County",
+              "description": "Description text.",
+              "instruction": "Avoid outdoor burning.",
+              "sent": "2026-10-25T16:00:00-07:00",
+              "expires": "2026-10-25T20:00:00-07:00",
+              "sender_name": "NWS San Francisco Bay Area CA",
+              "severity": "Severe",
+              "urgency": "Expected",
+              "area_desc": "Contra Costa County"
+            },
+            {
+              "id": "urn:Evacuation Immediate",
+              "event": "Evacuation Immediate",
+              "headline": "Evacuation Immediate issued for Contra Costa County",
+              "description": "Description text.",
+              "instruction": "Leave now via official routes.",
+              "sent": "2026-10-25T16:00:00-07:00",
+              "expires": "2026-10-25T20:00:00-07:00",
+              "sender_name": "NWS San Francisco Bay Area CA",
+              "severity": "Severe",
+              "urgency": "Expected",
+              "area_desc": "Contra Costa County"
+            }
+          ],
+          "wind_relation": "toward",
+          "user_reports_evac_order": false
+        },
+        "output": {
+          "level": "LEAVE NOW",
+          "guidance": "Follow the order and leave now.",
+          "facts": [
+            "Evacuation Immediate: Evacuation Immediate issued for Contra Costa County"
+          ]
+        }
+      },
+      "fire_warning": {
+        "input": {
+          "fires": [],
+          "alerts": [
+            {
+              "id": "urn:Fire Warning",
+              "event": "Fire Warning",
+              "headline": "Fire Warning issued for Contra Costa County",
+              "description": "Description text.",
+              "instruction": "Evacuate now.",
+              "sent": "2026-10-25T16:00:00-07:00",
+              "expires": "2026-10-25T20:00:00-07:00",
+              "sender_name": "NWS San Francisco Bay Area CA",
+              "severity": "Severe",
+              "urgency": "Expected",
+              "area_desc": "Contra Costa County"
+            }
+          ],
+          "wind_relation": null,
+          "user_reports_evac_order": false
+        },
+        "output": {
+          "level": "LEAVE NOW",
+          "guidance": "Follow the order and leave now.",
+          "facts": [
+            "Fire Warning: Fire Warning issued for Contra Costa County"
+          ]
+        }
+      },
+      "user_reports_order": {
+        "input": {
+          "fires": [
+            {
+              "key": "key-Morgan Fire",
+              "name": "Morgan Fire",
+              "acres": 40,
+              "percent_contained": 0,
+              "distance_mi": 9.0,
+              "direction": "E",
+              "bearing_deg": 90.0,
+              "discovered": "2026-10-25T15:52:00-07:00",
+              "updated": "2026-10-25T16:12:00-07:00",
+              "source": "NIFC"
+            }
+          ],
+          "alerts": [],
+          "wind_relation": null,
+          "user_reports_evac_order": true
+        },
+        "output": {
+          "level": "LEAVE NOW",
+          "guidance": "Follow the order and leave now.",
+          "facts": [
+            "User reported receiving an official evacuation order."
+          ]
+        }
+      },
+      "shelter_in_place": {
+        "input": {
+          "fires": [
+            {
+              "key": "key-Morgan Fire",
+              "name": "Morgan Fire",
+              "acres": 40,
+              "percent_contained": 0,
+              "distance_mi": 3.2,
+              "direction": "E",
+              "bearing_deg": 90.0,
+              "discovered": "2026-10-25T15:52:00-07:00",
+              "updated": "2026-10-25T16:12:00-07:00",
+              "source": "NIFC"
+            }
+          ],
+          "alerts": [
+            {
+              "id": "urn:Shelter In Place Warning",
+              "event": "Shelter In Place Warning",
+              "headline": "Shelter In Place Warning issued for Contra Costa County",
+              "description": "Description text.",
+              "instruction": "Stay indoors. Close all windows.",
+              "sent": "2026-10-25T16:00:00-07:00",
+              "expires": "2026-10-25T20:00:00-07:00",
+              "sender_name": "NWS San Francisco Bay Area CA",
+              "severity": "Severe",
+              "urgency": "Expected",
+              "area_desc": "Contra Costa County"
+            }
+          ],
+          "wind_relation": "toward",
+          "user_reports_evac_order": false
+        },
+        "output": {
+          "level": "FOLLOW SHELTER ORDER",
+          "guidance": "Stay indoors. Close all windows.",
+          "facts": [
+            "Shelter In Place Warning: Shelter In Place Warning issued for Contra Costa County"
+          ]
+        }
+      },
+      "shelter_no_instruction": {
+        "input": {
+          "fires": [],
+          "alerts": [
+            {
+              "id": "urn:Shelter In Place Warning",
+              "event": "Shelter In Place Warning",
+              "headline": "Shelter In Place Warning issued for Contra Costa County",
+              "description": "Shelter in place until further notice.",
+              "instruction": null,
+              "sent": "2026-10-25T16:00:00-07:00",
+              "expires": "2026-10-25T20:00:00-07:00",
+              "sender_name": "NWS San Francisco Bay Area CA",
+              "severity": "Severe",
+              "urgency": "Expected",
+              "area_desc": "Contra Costa County"
+            }
+          ],
+          "wind_relation": null,
+          "user_reports_evac_order": false
+        },
+        "output": {
+          "level": "FOLLOW SHELTER ORDER",
+          "guidance": "Shelter in place until further notice.",
+          "facts": [
+            "Shelter In Place Warning: Shelter In Place Warning issued for Contra Costa County"
+          ]
+        }
+      },
+      "shelter_and_evac": {
+        "input": {
+          "fires": [
+            {
+              "key": "key-Morgan Fire",
+              "name": "Morgan Fire",
+              "acres": 40,
+              "percent_contained": 0,
+              "distance_mi": 3.2,
+              "direction": "E",
+              "bearing_deg": 90.0,
+              "discovered": "2026-10-25T15:52:00-07:00",
+              "updated": "2026-10-25T16:12:00-07:00",
+              "source": "NIFC"
+            }
+          ],
+          "alerts": [
+            {
+              "id": "urn:Shelter In Place Warning",
+              "event": "Shelter In Place Warning",
+              "headline": "Shelter In Place Warning issued for Contra Costa County",
+              "description": "Description text.",
+              "instruction": "Stay indoors. Close all windows.",
+              "sent": "2026-10-25T16:00:00-07:00",
+              "expires": "2026-10-25T20:00:00-07:00",
+              "sender_name": "NWS San Francisco Bay Area CA",
+              "severity": "Severe",
+              "urgency": "Expected",
+              "area_desc": "Contra Costa County"
+            },
+            {
+              "id": "urn:Evacuation Immediate",
+              "event": "Evacuation Immediate",
+              "headline": "Evacuation Immediate issued for Contra Costa County",
+              "description": "Description text.",
+              "instruction": "Leave now via official routes.",
+              "sent": "2026-10-25T16:00:00-07:00",
+              "expires": "2026-10-25T20:00:00-07:00",
+              "sender_name": "NWS San Francisco Bay Area CA",
+              "severity": "Severe",
+              "urgency": "Expected",
+              "area_desc": "Contra Costa County"
+            }
+          ],
+          "wind_relation": null,
+          "user_reports_evac_order": false
+        },
+        "output": {
+          "level": "LEAVE NOW",
+          "guidance": "Follow the order and leave now.",
+          "facts": [
+            "Evacuation Immediate: Evacuation Immediate issued for Contra Costa County"
+          ]
+        }
+      }
+    },
+    "wind_check": [
+      {
+        "wind": {
+          "station_id": "KCCR",
+          "station_distance_mi": 8.1,
+          "obs_time": "2026-10-25T16:30:00-07:00",
+          "wind_from_deg": 90,
+          "wind_speed_mph": 14.0,
+          "wind_gust_mph": 25.0,
+          "forecast_hourly": [
+            {
+              "start_time": "2026-10-25T18:00:00-07:00",
+              "wind_speed": "10 mph",
+              "wind_direction": "NW"
+            }
+          ]
+        },
+        "bearing": 90.0,
+        "output": {
+          "station_id": "KCCR",
+          "station_distance_mi": 8.1,
+          "obs_time": "2026-10-25T16:30:00-07:00",
+          "stale": false,
+          "wind_from_deg": 90,
+          "wind_speed_mph": 14.0,
+          "wind_gust_mph": 25.0,
+          "relation_to_fire": "toward",
+          "forecast_hourly": [
+            {
+              "start_time": "2026-10-25T18:00:00-07:00",
+              "wind_speed": "10 mph",
+              "wind_direction": "NW"
+            }
+          ],
+          "caveat": "Local and terrain winds can differ, and embers can travel miles ahead of a fire."
+        }
+      },
+      {
+        "wind": {
+          "station_id": "KCCR",
+          "station_distance_mi": 8.1,
+          "obs_time": "2026-10-25T16:30:00-07:00",
+          "wind_from_deg": 90,
+          "wind_speed_mph": 14.0,
+          "wind_gust_mph": 25.0,
+          "forecast_hourly": [
+            {
+              "start_time": "2026-10-25T18:00:00-07:00",
+              "wind_speed": "10 mph",
+              "wind_direction": "NW"
+            }
+          ]
+        },
+        "bearing": null,
+        "output": {
+          "station_id": "KCCR",
+          "station_distance_mi": 8.1,
+          "obs_time": "2026-10-25T16:30:00-07:00",
+          "stale": false,
+          "wind_from_deg": 90,
+          "wind_speed_mph": 14.0,
+          "wind_gust_mph": 25.0,
+          "relation_to_fire": null,
+          "forecast_hourly": [
+            {
+              "start_time": "2026-10-25T18:00:00-07:00",
+              "wind_speed": "10 mph",
+              "wind_direction": "NW"
+            }
+          ],
+          "caveat": "Local and terrain winds can differ, and embers can travel miles ahead of a fire."
+        }
+      },
+      {
+        "wind": {
+          "station_id": "KCCR",
+          "station_distance_mi": 8.1,
+          "obs_time": "2026-10-25T13:00:00-07:00",
+          "wind_from_deg": 90,
+          "wind_speed_mph": 14.0,
+          "wind_gust_mph": 25.0,
+          "forecast_hourly": [
+            {
+              "start_time": "2026-10-25T18:00:00-07:00",
+              "wind_speed": "10 mph",
+              "wind_direction": "NW"
+            }
+          ]
+        },
+        "bearing": 260.0,
+        "output": {
+          "station_id": "KCCR",
+          "station_distance_mi": 8.1,
+          "obs_time": "2026-10-25T13:00:00-07:00",
+          "stale": true,
+          "wind_from_deg": 90,
+          "wind_speed_mph": 14.0,
+          "wind_gust_mph": 25.0,
+          "relation_to_fire": "away",
+          "forecast_hourly": [
+            {
+              "start_time": "2026-10-25T18:00:00-07:00",
+              "wind_speed": "10 mph",
+              "wind_direction": "NW"
+            }
+          ],
+          "caveat": "Local and terrain winds can differ, and embers can travel miles ahead of a fire."
+        }
+      }
+    ]
+  },
+  "templates": {
+    "tz": "America/Los_Angeles",
+    "format_time": [
+      [
+        "2026-10-25T16:00:00-07:00",
+        null,
+        "4:00 PM PDT"
+      ],
+      [
+        "2026-10-25T16:00:00-07:00",
+        "America/Los_Angeles",
+        "4:00 PM PDT"
+      ],
+      [
+        "2026-10-25T23:05:00Z",
+        "America/Los_Angeles",
+        "4:05 PM PDT"
+      ],
+      [
+        "2026-12-01T00:30:00Z",
+        "America/Los_Angeles",
+        "4:30 PM PST"
+      ],
+      [
+        "2026-10-25T12:00:00-07:00",
+        "America/Denver",
+        "1:00 PM MDT"
+      ],
+      [
+        "2026-01-15T09:07:00-07:00",
+        "America/Denver",
+        "9:07 AM MST"
+      ],
+      [
+        "2026-10-25T16:00:00-07:00",
+        "UTC",
+        "11:00 PM UTC"
+      ],
+      [
+        null,
+        "America/Los_Angeles",
+        "time unknown"
+      ]
+    ],
+    "fires": {
+      "f40": {
+        "key": "key-Morgan Fire",
+        "name": "Morgan Fire",
+        "acres": 40,
+        "percent_contained": 0,
+        "distance_mi": 9.0,
+        "direction": "E",
+        "bearing_deg": 90.0,
+        "discovered": "2026-10-25T15:52:00-07:00",
+        "updated": "2026-10-25T16:12:00-07:00",
+        "source": "NIFC"
+      },
+      "f150": {
+        "key": "key-Morgan Fire",
+        "name": "Morgan Fire",
+        "acres": 150,
+        "percent_contained": 5,
+        "distance_mi": 9.0,
+        "direction": "E",
+        "bearing_deg": 90.0,
+        "discovered": "2026-10-25T15:52:00-07:00",
+        "updated": "2026-10-25T16:12:00-07:00",
+        "source": "NIFC"
+      },
+      "f_frac": {
+        "key": "key-Morgan Fire",
+        "name": "Morgan Fire",
+        "acres": 152.7,
+        "percent_contained": 12.5,
+        "distance_mi": 9.0,
+        "direction": "E",
+        "bearing_deg": 90.0,
+        "discovered": "2026-10-25T15:52:00-07:00",
+        "updated": "2026-10-25T16:12:00-07:00",
+        "source": "NIFC"
+      },
+      "f_none": {
+        "key": "key-Unknown Fire",
+        "name": "Unknown Fire",
+        "acres": null,
+        "percent_contained": null,
+        "distance_mi": 4.25,
+        "direction": "WNW",
+        "bearing_deg": 300.0,
+        "discovered": "2026-10-25T15:52:00-07:00",
+        "updated": "2026-10-25T16:12:00-07:00",
+        "source": "NIFC"
+      },
+      "f_done": {
+        "key": "key-Morgan Fire",
+        "name": "Morgan Fire",
+        "acres": 1210,
+        "percent_contained": 100,
+        "distance_mi": 9.0,
+        "direction": "E",
+        "bearing_deg": 90.0,
+        "discovered": "2026-10-25T15:52:00-07:00",
+        "updated": "2026-10-25T16:12:00-07:00",
+        "source": "NIFC"
+      }
+    },
+    "alert_inputs": {
+      "red": {
+        "id": "urn:Red Flag Warning",
+        "event": "Red Flag Warning",
+        "headline": "Red Flag Warning issued for Contra Costa County",
+        "description": "Description text.",
+        "instruction": "Avoid outdoor burning.",
+        "sent": "2026-10-25T16:00:00-07:00",
+        "expires": "2026-10-25T20:00:00-07:00",
+        "sender_name": "NWS San Francisco Bay Area CA",
+        "severity": "Severe",
+        "urgency": "Expected",
+        "area_desc": "Contra Costa County"
+      },
+      "same": {
+        "id": "urn:Red Flag Warning",
+        "event": "Red Flag Warning",
+        "headline": "Red Flag Warning issued",
+        "description": "Description text.",
+        "instruction": "Red Flag Warning issued",
+        "sent": "2026-10-25T16:00:00-07:00",
+        "expires": "2026-10-25T20:00:00-07:00",
+        "sender_name": "NWS San Francisco Bay Area CA",
+        "severity": "Severe",
+        "urgency": "Expected",
+        "area_desc": "Contra Costa County"
+      },
+      "no_body": {
+        "id": "urn:Fire Weather Watch",
+        "event": "Fire Weather Watch",
+        "headline": "Fire Weather Watch issued for Contra Costa County",
+        "description": null,
+        "instruction": null,
+        "sent": "2026-10-25T16:00:00-07:00",
+        "expires": "2026-10-25T20:00:00-07:00",
+        "sender_name": "NWS San Francisco Bay Area CA",
+        "severity": "Severe",
+        "urgency": "Expected",
+        "area_desc": "Contra Costa County"
+      },
+      "long": {
+        "id": "urn:Evacuation Immediate",
+        "event": "Evacuation Immediate",
+        "headline": "Evacuation Immediate issued for Contra Costa County",
+        "description": "Description text.",
+        "instruction": "Leave now. Follow law enforcement direction and use designated routes only. Follow law enforcement direction and use designated routes only. Follow law enforcement direction and use designated routes only. Follow law enforcement direction and use designated routes only. Follow law enforcement direction and use designated routes only. Follow law enforcement direction and use designated routes only. Follow law enforcement direction and use designated routes only. Follow law enforcement direction and use designated routes only. Follow law enforcement direction and use designated routes only. Follow law enforcement direction and use designated routes only. Follow law enforcement direction and use designated routes only. Follow law enforcement direction and use designated routes only. ",
+        "sent": "2026-10-25T16:00:00-07:00",
+        "expires": "2026-10-25T20:00:00-07:00",
+        "sender_name": "NWS San Francisco Bay Area CA",
+        "severity": "Severe",
+        "urgency": "Expected",
+        "area_desc": "Contra Costa County"
+      }
+    },
+    "alerts": {
+      "new_fire": "🔥 New fire near Home: \"Morgan Fire,\" ~9 mi E, 40 acres, 0% contained (NIFC, updated 4:12 PM PDT). No official NWS fire alerts for your location right now. Reply with any question, e.g. \"should I leave?\"",
+      "new_fire_none_values": "🔥 New fire near Home: \"Unknown Fire,\" ~4.25 mi WNW, size unknown, containment unknown (NIFC, updated 4:12 PM PDT). No official NWS fire alerts for your location right now. Reply with any question, e.g. \"should I leave?\"",
+      "growth_100": "🔥 Growing fire near Home: \"Morgan Fire,\" ~9 mi E, 150 acres, 5% contained (NIFC, updated 4:12 PM PDT) (crossed 100 acres).",
+      "growth_1000_frac": "🔥 Growing fire near Home: \"Morgan Fire,\" ~9 mi E, 152.7 acres, 12.5% contained (NIFC, updated 4:12 PM PDT) (crossed 1,000 acres).",
+      "growth_10000": "🔥 Growing fire near Parents: \"Morgan Fire,\" ~9 mi E, 150 acres, 5% contained (NIFC, updated 4:12 PM PDT) (crossed 10,000 acres).",
+      "containment": "✅ Morgan Fire near Home is now 100% contained (NIFC, updated 4:12 PM PDT).",
+      "official_red_flag": "⚠️ Red Flag Warning near Home: Red Flag Warning issued for Contra Costa County\nAvoid outdoor burning.\n(NWS San Francisco Bay Area CA, sent 4:00 PM PDT)",
+      "official_same_text": "⚠️ Red Flag Warning near Home: Red Flag Warning issued\n(NWS San Francisco Bay Area CA, sent 4:00 PM PDT)",
+      "official_no_body": "⚠️ Fire Weather Watch near Home: Fire Weather Watch issued for Contra Costa County\n(NWS San Francisco Bay Area CA, sent 4:00 PM PDT)",
+      "official_long": "⚠️ Evacuation Immediate near Home: Evacuation Immediate issued for Contra Costa County\nLeave now. Follow law enforcement direction and use designated routes only. Follow law enforcement direction and use designated routes only. Follow law enforcement direction and use designated routes only. Follow law enforcement direction and use designated routes only. Follow law enforcement direction and use designated routes only. Follow law enfo… https://api.weather.gov/alerts/active"
+    },
+    "wind_lines": {
+      "full_toward": {
+        "wind": {
+          "station_id": "KCCR",
+          "obs_time": "2026-10-25T16:30:00-07:00",
+          "wind_from_deg": 90,
+          "wind_speed_mph": 14.0,
+          "wind_gust_mph": 25.0,
+          "relation_to_fire": "toward",
+          "relative_to_fire": "Morgan Fire",
+          "stale": false,
+          "forecast_hourly": [
+            {
+              "start_time": "2026-10-25T18:00:00-07:00",
+              "wind_speed": "10 to 15 mph",
+              "wind_direction": "NW"
+            }
+          ]
+        },
+        "text": "Wind: from E at 14 mph (gusts 25), blowing from Morgan Fire toward you (KCCR obs, 4:30 PM PDT)."
+      },
+      "no_gust_away": {
+        "wind": {
+          "station_id": "KCCR",
+          "obs_time": "2026-10-25T16:30:00-07:00",
+          "wind_from_deg": 90,
+          "wind_speed_mph": 8.5,
+          "wind_gust_mph": null,
+          "relation_to_fire": "away",
+          "relative_to_fire": "Morgan Fire",
+          "stale": false,
+          "forecast_hourly": [
+            {
+              "start_time": "2026-10-25T18:00:00-07:00",
+              "wind_speed": "10 to 15 mph",
+              "wind_direction": "NW"
+            }
+          ]
+        },
+        "text": "Wind: from E at 8.5 mph, blowing away from Morgan Fire (KCCR obs, 4:30 PM PDT)."
+      },
+      "crosswind_stale": {
+        "wind": {
+          "station_id": "KCCR",
+          "obs_time": "2026-10-25T16:30:00-07:00",
+          "wind_from_deg": 90,
+          "wind_speed_mph": 14.0,
+          "wind_gust_mph": 25.0,
+          "relation_to_fire": "crosswind",
+          "relative_to_fire": "Morgan Fire",
+          "stale": true,
+          "forecast_hourly": [
+            {
+              "start_time": "2026-10-25T18:00:00-07:00",
+              "wind_speed": "10 to 15 mph",
+              "wind_direction": "NW"
+            }
+          ]
+        },
+        "text": "Wind: from E at 14 mph (gusts 25), crosswind to Morgan Fire (KCCR obs, 4:30 PM PDT -- stale)."
+      },
+      "light": {
+        "wind": {
+          "station_id": "KCCR",
+          "obs_time": "2026-10-25T16:30:00-07:00",
+          "wind_from_deg": 90,
+          "wind_speed_mph": 3.0,
+          "wind_gust_mph": 25.0,
+          "relation_to_fire": "light_variable",
+          "relative_to_fire": null,
+          "stale": false,
+          "forecast_hourly": [
+            {
+              "start_time": "2026-10-25T18:00:00-07:00",
+              "wind_speed": "10 to 15 mph",
+              "wind_direction": "NW"
+            }
+          ]
+        },
+        "text": "Wind: from E at 3 mph (gusts 25), light and variable (KCCR obs, 4:30 PM PDT)."
+      },
+      "relation_without_fire": {
+        "wind": {
+          "station_id": "KCCR",
+          "obs_time": "2026-10-25T16:30:00-07:00",
+          "wind_from_deg": 90,
+          "wind_speed_mph": 14.0,
+          "wind_gust_mph": 25.0,
+          "relation_to_fire": "toward",
+          "relative_to_fire": null,
+          "stale": false,
+          "forecast_hourly": [
+            {
+              "start_time": "2026-10-25T18:00:00-07:00",
+              "wind_speed": "10 to 15 mph",
+              "wind_direction": "NW"
+            }
+          ]
+        },
+        "text": "Wind: from E at 14 mph (gusts 25) (KCCR obs, 4:30 PM PDT)."
+      },
+      "no_station": {
+        "wind": {
+          "station_id": null,
+          "obs_time": "2026-10-25T16:30:00-07:00",
+          "wind_from_deg": 90,
+          "wind_speed_mph": 14.0,
+          "wind_gust_mph": 25.0,
+          "relation_to_fire": "toward",
+          "relative_to_fire": "Morgan Fire",
+          "stale": false,
+          "forecast_hourly": [
+            {
+              "start_time": "2026-10-25T18:00:00-07:00",
+              "wind_speed": "10 to 15 mph",
+              "wind_direction": "NW"
+            }
+          ]
+        },
+        "text": "Wind: from E at 14 mph (gusts 25), blowing from Morgan Fire toward you (obs obs, 4:30 PM PDT)."
+      },
+      "gust_only": {
+        "wind": {
+          "station_id": "KCCR",
+          "obs_time": "2026-10-25T16:30:00-07:00",
+          "wind_from_deg": null,
+          "wind_speed_mph": null,
+          "wind_gust_mph": 25.0,
+          "relation_to_fire": "toward",
+          "relative_to_fire": "Morgan Fire",
+          "stale": false,
+          "forecast_hourly": [
+            {
+              "start_time": "2026-10-25T18:00:00-07:00",
+              "wind_speed": "10 to 15 mph",
+              "wind_direction": "NW"
+            }
+          ]
+        },
+        "text": "Wind: gusts 25 mph, no steady reading (KCCR obs, 4:30 PM PDT); forecast NW 10 to 15 mph from 6:00 PM PDT."
+      },
+      "forecast_only": {
+        "wind": {
+          "station_id": "KCCR",
+          "obs_time": "2026-10-25T16:30:00-07:00",
+          "wind_from_deg": null,
+          "wind_speed_mph": null,
+          "wind_gust_mph": null,
+          "relation_to_fire": "toward",
+          "relative_to_fire": "Morgan Fire",
+          "stale": false,
+          "forecast_hourly": [
+            {
+              "start_time": "2026-10-25T18:00:00-07:00",
+              "wind_speed": "10 to 15 mph",
+              "wind_direction": "NW"
+            }
+          ]
+        },
+        "text": "Wind: forecast NW 10 to 15 mph from 6:00 PM PDT."
+      },
+      "unavailable": {
+        "wind": {
+          "wind_from_deg": null,
+          "wind_speed_mph": null,
+          "wind_gust_mph": null,
+          "forecast_hourly": []
+        },
+        "text": "Wind: observation unavailable."
+      }
+    },
+    "status": {
+      "calm": "Status check for Home:\nNothing nearby right now.",
+      "fire_and_alert_with_wind": "Status check for Home:\n- \"Morgan Fire,\" ~9 mi E, 150 acres, 5% contained (NIFC, updated 4:12 PM PDT)\n- Red Flag Warning: Red Flag Warning issued for Contra Costa County\nWind: from E at 14 mph (gusts 25), blowing from Morgan Fire toward you (KCCR obs, 4:30 PM PDT)."
+    },
+    "status_inputs": {
+      "wind": {
+        "station_id": "KCCR",
+        "obs_time": "2026-10-25T16:30:00-07:00",
+        "wind_from_deg": 90,
+        "wind_speed_mph": 14.0,
+        "wind_gust_mph": 25.0,
+        "relation_to_fire": "toward",
+        "relative_to_fire": "Morgan Fire",
+        "stale": false,
+        "forecast_hourly": [
+          {
+            "start_time": "2026-10-25T18:00:00-07:00",
+            "wind_speed": "10 to 15 mph",
+            "wind_direction": "NW"
+          }
+        ]
+      }
+    },
+    "constants": {
+      "feel_unsafe": "If you're in immediate danger, call 911. If you feel unsafe, leave. You don't need to wait for an order.",
+      "no_other_alerts": "No official NWS fire alerts for your location right now.",
+      "guidance": {
+        "LEAVE NOW": "Follow the order and leave now.",
+        "GET READY: LEAVE EARLY IF YOU NEED TIME": "Leave now if you have kids, pets, livestock, or mobility needs, or if you feel unsafe.",
+        "BE READY": "Pack a go-bag, know your zone and two ways out.",
+        "MONITOR": "Nothing nearby right now. I'll text you if that changes."
+      }
+    }
+  }
+}

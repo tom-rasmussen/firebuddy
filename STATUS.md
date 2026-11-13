@@ -1,5 +1,24 @@
 # FireBuddy build status
 
+## Web demo on Cloudflare Workers: spec + Phases 0-1 (2026-11-13)
+Started the weekend PM-case-study build. Spec-driven: `specs/firebuddy-worker/` holds
+`constitution.md` (rules), `spec.md` (users, stories, acceptance criteria AC-1..AC-16, metrics),
+`plan.md` (architecture) and `tasks.md` (phases with "done when").
+
+- **Phase 0 (setup) done.** `worker/`: Wrangler 4.161, TypeScript, Vitest 4 with
+  `@cloudflare/vitest-plugin` (the renamed `vitest-pool-workers`), Workers Static Assets for the UI,
+  and a `RATE_LIMITER` rate-limit binding (60 req / 60 s) for AC-15. `wrangler dev` serves the
+  placeholder page and `/api/health`; types generated with `wrangler types`.
+- **Phase 1 (engine port) done.** `worker/src/engine/`: `geo.ts`, `assess.ts`, `templates.ts`,
+  plus `pyfmt.ts`/`pystr.ts` so numbers print exactly like Python (`:g`, `round()` ties-to-even,
+  `str(9.0)` -> "9.0"). `scripts/export_golden.py` runs the Python engine over fixed cases into
+  `worker/test/golden.json`; `worker/test/parity.test.ts` asserts the TypeScript output is identical.
+  **42/42 tests pass, `tsc` clean.** Mutation check: removing "Evacuation Immediate" from the
+  leave-now events makes 3 tests fail, so the AC-5 safety rule is genuinely covered.
+- **Known issue (kept for parity, not fixed):** `templates.wind_line` prints "obs obs" when a
+  wind reading has no station id. Fix in both builds later.
+- **Next:** Phase 2 (replay scenario), 3 (API + intent router), 4 (UI), 5 (test mode), 6 (package).
+
 ## Testing without Twilio (2026-10-29)
 Ran the dry-run web app (`DRY_RUN=true`, fake texts posted to `/sms` with curl) against
 live data and the real model, plus scripted `sim.py` runs. Fixed two issues found:
