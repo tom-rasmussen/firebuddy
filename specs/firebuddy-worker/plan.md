@@ -44,7 +44,7 @@ Keyword and phrase matching, in priority order: leave / evacuate / safe → read
 
 ## Security
 
-- `ratelimits` binding: about 60 requests per 60 s per IP on `/api/*` (AC-15).
+- `ratelimits` binding: about 120 requests per 60 s per IP (a page load is ~8 calls; testers may share Wi-Fi) on `/api/*` (AC-15).
 - No secrets are needed for the demo.
 - Strict input validation on `/api/ask`: step must be an integer in range; the question is trimmed to 200 characters.
 

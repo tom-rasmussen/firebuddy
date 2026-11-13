@@ -36,6 +36,7 @@
   <!-- DEMO MODE -->
   <main id="demo" hidden>
     <section class="timeline" aria-label="Scenario timeline">
+      <div class="timeline-main">
       <div class="timeline-head">
         <div>
           <span class="eyebrow">Simulated scenario · Home, Danville, CA</span>
@@ -50,6 +51,16 @@
         <button id="play" type="button">▶ Play</button>
         <button id="reset" type="button">Reset</button>
       </div>
+      </div>
+      <figure class="situation" aria-labelledby="map-cap">
+        <div class="readiness" id="readiness">
+          <span class="eyebrow">Readiness for Home</span>
+          <strong id="readiness-level">MONITOR</strong>
+          <span id="readiness-guidance"></span>
+        </div>
+        <div id="map" class="map"></div>
+        <figcaption id="map-cap">What FireBuddy sees for Home: the fire's distance and direction, and which way the wind is pushing it. Rings every 5 mi. Simulated.</figcaption>
+      </figure>
     </section>
 
     <section class="panels">

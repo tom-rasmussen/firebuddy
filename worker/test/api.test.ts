@@ -129,6 +129,8 @@ describe("API", () => {
     expect(body.alerts[0].kind).toBe("official");
     expect(body.assessment.level).toBe(LEVEL_LEAVE_NOW);
     expect(body.simulated).toBe(true);
+    expect(body.map.fires[0]).toMatchObject({ name: "Morgan Fire", direction: "E" });
+    expect(body.map.wind.relation).toBe("toward");
   });
 
   it.each(["7", "-1", "1.5", "abc"])("GET /api/step/%s is rejected", async (n) => {
@@ -159,11 +161,11 @@ describe("API", () => {
     expect(await page.text()).toContain("not affiliated with Watch Duty");
   });
 
-  it("AC-15: over 60 requests a minute from one IP returns a friendly 429", async () => {
+  it("AC-15: over 120 requests a minute from one IP returns a friendly 429", async () => {
     const ip = "203.0.113.7";
     const statuses: number[] = [];
-    for (let i = 0; i < 65; i++) statuses.push((await call("/api/health", undefined, ip)).status);
-    expect(statuses.slice(0, 60).every((s) => s === 200)).toBe(true);
+    for (let i = 0; i < 125; i++) statuses.push((await call("/api/health", undefined, ip)).status);
+    expect(statuses.slice(0, 120).every((s) => s === 200)).toBe(true);
     const limited = await call("/api/health", undefined, ip);
     expect(limited.status).toBe(429);
     expect(((await limited.json()) as any).error).toContain("wait a minute");

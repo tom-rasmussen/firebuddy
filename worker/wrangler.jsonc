@@ -9,12 +9,12 @@
     "binding": "ASSETS",
     "run_worker_first": ["/api/*"]
   },
-  // AC-15: per-IP rate limit on /api/*.
+  // AC-15: per-IP rate limit on /api/*. 120/min: one page load is ~8 calls, and testers may share Wi-Fi.
   "ratelimits": [
     {
       "name": "RATE_LIMITER",
       "namespace_id": "1001",
-      "simple": { "limit": 60, "period": 60 }
+      "simple": { "limit": 120, "period": 60 }
     }
   ],
   "observability": { "enabled": true }

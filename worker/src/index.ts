@@ -1,7 +1,7 @@
 // FireBuddy web demo: static UI from public/, JSON API under /api/*.
 
 import { answer } from "./engine/answer";
-import { alertsAt, assessState } from "./engine/monitor";
+import { alertsAt, assessState, windForState } from "./engine/monitor";
 import { formatTime } from "./engine/templates";
 import { PLACE, RADIUS_MI, STEP_COUNT, TZ, stateAt } from "./scenario/morgan";
 
@@ -19,6 +19,7 @@ function parseStep(raw: unknown): number | null {
 function stepPayload(n: number) {
   const state = stateAt(n);
   const assessment = assessState(state);
+  const wind = windForState(state);
   return {
     step: n,
     title: state.title,
@@ -27,6 +28,25 @@ function stepPayload(n: number) {
     baseline: state.baseline,
     alerts: alertsAt(n),
     assessment,
+    // Inputs for the situation map: positions relative to Home, all simulated.
+    map: {
+      radiusMi: RADIUS_MI,
+      fires: state.fires.map((f) => ({
+        name: f.name,
+        distanceMi: f.distance_mi,
+        bearingDeg: f.bearing_deg,
+        direction: f.direction,
+        acres: f.acres,
+        contained: f.percent_contained,
+      })),
+      wind: {
+        fromDeg: wind.wind_from_deg ?? null,
+        mph: wind.wind_speed_mph ?? null,
+        gustMph: wind.wind_gust_mph ?? null,
+        relation: wind.relation_to_fire ?? null,
+      },
+      shelters: state.shelters.map((s) => ({ name: s.name, distanceMi: s.distance_mi })),
+    },
     simulated: true,
   };
 }

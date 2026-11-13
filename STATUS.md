@@ -1,5 +1,16 @@
 # FireBuddy build status
 
+## UI refresh + situation map (2026-11-13)
+- Light editorial restyle (serif headlines, cream background, color reserved for readiness levels).
+  Kept light on purpose: it's an emergency product and should read calm.
+- New situation map (SVG, no libraries): Home at center, rings every 5 mi, the fire at its real
+  distance and bearing, and a wind arrow colored by relation (red toward, amber crosswind, grey away).
+  It has an aria-label describing the same facts in words. `/api/step/:n` now returns a `map` object.
+- Readiness card next to the map shows the current level and guidance.
+- Rate limit raised from 60 to 120 req/min per IP: one page load is ~8 API calls, and test
+  participants may share one Wi-Fi IP. Found by hitting the limit during browser checks.
+- 82 tests pass; checked at 1440 px and 375 px with no console errors.
+
 ## Web demo on Cloudflare Workers: Phases 2-6 (2026-11-13)
 - **Phase 2, replay scenario:** `worker/src/scenario/morgan.ts`, 7 SIMULATED steps (quiet, fire 9 mi E,
   wind toward + Red Flag, growth past 100 ac, evacuation order, shelter + 1,000 ac, contained).
@@ -8,7 +19,7 @@
   (`monitor.py` always uses that note; fix there too).
 - **Phase 3, API:** `GET /api/scenario`, `GET /api/step/:n`, `POST /api/ask` with a deterministic
   intent router (readiness, wind, shelter, status, route, flames, help), the Python blocked-phrase
-  validator, input validation, and the `RATE_LIMITER` binding (429 after 60 req/min per IP).
+  validator, input validation, and the `RATE_LIMITER` binding (429 after 120 req/min per IP).
 - **Phases 4-5, UI + test mode:** three panels (county baseline, FireBuddy chat, PM decision trace +
   event log), timeline controls, and `?mode=baseline|firebuddy` decision tests that record choice,
   correctness and seconds per moment, with copyable results. Checked in headless Chrome at 1440 px and
