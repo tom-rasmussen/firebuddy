@@ -363,9 +363,11 @@ async function startTest(condition) {
 
 // ---------- boot ----------
 const mode = new URLSearchParams(location.search).get("mode");
+const isTest = mode === "baseline" || mode === "firebuddy";
+if (mode === "try") document.body.classList.add("try");
 for (const a of document.querySelectorAll(".modes a[data-mode]")) {
-  if (a.dataset.mode === (mode === "baseline" || mode === "firebuddy" ? mode : "demo")) a.classList.add("active");
+  if (a.dataset.mode === (isTest || mode === "try" ? mode : "demo")) a.classList.add("active");
 }
-(mode === "baseline" || mode === "firebuddy" ? startTest(mode) : startDemo()).catch((e) => {
+(isTest ? startTest(mode) : startDemo()).catch((e) => {
   document.querySelector("main:not([hidden])")?.prepend(el("p", { class: "empty", text: `Couldn't load the demo: ${e.message}` }));
 });

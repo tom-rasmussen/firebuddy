@@ -2,7 +2,7 @@
 
 **County fire alerts tell you a fire exists. FireBuddy tells you what it means for your address.**
 
-**Live demo:** https://firebuddy.tom-j-rasmussen.workers.dev (simulated data)
+**Try it:** https://firebuddy.tom-j-rasmussen.workers.dev/?mode=try · **Full demo with PM view:** https://firebuddy.tom-j-rasmussen.workers.dev (simulated data)
 **Spec:** [`specs/firebuddy-worker/`](specs/firebuddy-worker/) · Independent concept, not affiliated with Watch Duty.
 
 ## The problem
@@ -26,7 +26,8 @@ so I don't have to read a map under stress.
 
 ## Try it
 
-- **Demo:** step through a simulated fire and compare a generic county alert, FireBuddy, and a
+- **Try FireBuddy** ([`?mode=try`](https://firebuddy.tom-j-rasmussen.workers.dev/?mode=try)): just the phone. Step through the fire and ask questions.
+- **Full demo:** step through a simulated fire and compare a generic county alert, FireBuddy, and a
   "PM view" showing which component decided each reply.
 - **Decision test:** [`?mode=baseline`](https://firebuddy.tom-j-rasmussen.workers.dev/?mode=baseline) then
   [`?mode=firebuddy`](https://firebuddy.tom-j-rasmussen.workers.dev/?mode=firebuddy). It times how long a

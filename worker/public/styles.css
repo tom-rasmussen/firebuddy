@@ -216,3 +216,12 @@ button.big { font-size: 16px; padding: 12px 22px; }
 .panels > *, .test-body > *, .phone, .timeline { min-width: 0; }
 .decide { position: static; }
 .trace .level { display: inline-block; max-width: none; text-align: left; }
+
+/* Try mode: just the phone and the timeline. */
+.try-only { display: none; }
+body.try .try-only { display: block; }
+body.try #baseline-panel, body.try #pm-panel { display: none; }
+body.try .panels { grid-template-columns: minmax(0, 560px); justify-content: center; }
+body.try .timeline { max-width: 560px; margin: 0 auto; }
+body.try .steps { grid-template-columns: repeat(2, 1fr); }
+body.try .steps button { min-height: 0; }
