@@ -1,5 +1,22 @@
 # FireBuddy build status
 
+## Web demo on Cloudflare Workers: Phases 2-6 (2026-11-13)
+- **Phase 2, replay scenario:** `worker/src/scenario/morgan.ts`, 7 SIMULATED steps (quiet, fire 9 mi E,
+  wind toward + Red Flag, growth past 100 ac, evacuation order, shelter + 1,000 ac, contained).
+  `worker/src/engine/monitor.ts` ports `monitor.py`'s triggers and dedupe over the timeline.
+  Deviation: the new-fire alert no longer claims "no official alerts" when one is in effect
+  (`monitor.py` always uses that note; fix there too).
+- **Phase 3, API:** `GET /api/scenario`, `GET /api/step/:n`, `POST /api/ask` with a deterministic
+  intent router (readiness, wind, shelter, status, route, flames, help), the Python blocked-phrase
+  validator, input validation, and the `RATE_LIMITER` binding (429 after 60 req/min per IP).
+- **Phases 4-5, UI + test mode:** three panels (county baseline, FireBuddy chat, PM decision trace +
+  event log), timeline controls, and `?mode=baseline|firebuddy` decision tests that record choice,
+  correctness and seconds per moment, with copyable results. Checked in headless Chrome at 1440 px and
+  375 px: no horizontal overflow, no console errors.
+- **Tests:** 82 passing across parity, scenario and API suites (every AC from spec.md that applies to the
+  Worker); `tsc` clean; `wrangler deploy --dry-run` clean.
+- **Next:** Tom deploys, runs one pilot session, then the 5-person test on Sunday.
+
 ## Web demo on Cloudflare Workers: spec + Phases 0-1 (2026-11-13)
 Started the weekend PM-case-study build. Spec-driven: `specs/firebuddy-worker/` holds
 `constitution.md` (rules), `spec.md` (users, stories, acceptance criteria AC-1..AC-16, metrics),

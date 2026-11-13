@@ -1,5 +1,54 @@
 # FireBuddy
 
+**County fire alerts tell you a fire exists. FireBuddy tells you what it means for your address.**
+
+**Live demo:** https://firebuddy.tom-j-rasmussen.workers.dev (simulated data)
+**Spec:** [`specs/firebuddy-worker/`](specs/firebuddy-worker/) · Independent concept, not affiliated with Watch Duty.
+
+## The problem
+
+Wildfire alerts are usually organized by county. When one arrives, a resident still has to read a map,
+judge distance and wind, and decide what to do while stressed. FireBuddy, inspired by my volunteer work
+with Watch Duty, turns verified alerts into an answer for one address: how far, which way the wind is
+blowing, what readiness level, and what to do next.
+
+**Job to be done:** When a fire alert hits my county, help me decide whether my home needs action,
+so I don't have to read a map under stress.
+
+## What it does, and what it deliberately doesn't
+
+| FireBuddy does | FireBuddy never does |
+|---|---|
+| Sends one alert per new fire, growth threshold, containment or official order | Decide whether to alert with an LLM |
+| Gives a readiness level for your address from deterministic rules | Lower a readiness level, or say "you're safe" |
+| Quotes official orders word for word, with sender and time | Paraphrase an order or generate an evacuation route |
+| Explains wind relative to the fire, with the terrain caveat | Create information: it explains verified facts only |
+
+## Try it
+
+- **Demo:** step through a simulated fire and compare a generic county alert, FireBuddy, and a
+  "PM view" showing which component decided each reply.
+- **Decision test:** [`?mode=baseline`](https://firebuddy.tom-j-rasmussen.workers.dev/?mode=baseline) then
+  [`?mode=firebuddy`](https://firebuddy.tom-j-rasmussen.workers.dev/?mode=firebuddy). It times how long a
+  participant takes to reach a correct readiness decision in each condition. Results stay in the browser.
+
+## How it was built
+
+Spec-driven: [`constitution.md`](specs/firebuddy-worker/constitution.md) (rules),
+[`spec.md`](specs/firebuddy-worker/spec.md) (users, stories, 16 acceptance criteria, metrics),
+[`plan.md`](specs/firebuddy-worker/plan.md) and [`tasks.md`](specs/firebuddy-worker/tasks.md).
+Every acceptance criterion has a test named after it.
+
+- **Web demo (`worker/`):** Cloudflare Workers + Static Assets, with a Workers rate-limit binding on
+  the API. The decision engine is a line-for-line TypeScript port of the Python build, and parity tests
+  prove identical output.
+- **SMS build (`firebuddy/`):** the original Python agent below, with live NIFC / NWS / FEMA data, a
+  Claude tool-using agent, a grounding validator and evals.
+
+---
+
+## Engineering: the SMS build
+
 FireBuddy is an SMS wildfire assistant: text it an address and it watches that
 place for active fires and official alerts, texts you first when something
 changes, and answers plain-language questions like "should I leave?", "is the

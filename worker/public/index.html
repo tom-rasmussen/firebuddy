@@ -1,3 +1,175 @@
 <!doctype html>
-<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>FireBuddy (concept)</title></head>
-<body><p>FireBuddy demo coming soon. Independent concept, not affiliated with Watch Duty.</p></body></html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>FireBuddy: address-aware wildfire companion (concept demo)</title>
+  <meta name="description" content="A concept demo: FireBuddy explains what verified wildfire alerts mean for one address. Simulated data. Not affiliated with Watch Duty.">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22%3E%3Ctext y=%22.9em%22 font-size=%2290%22%3E%F0%9F%94%A5%3C/text%3E%3C/svg%3E">
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+  <div class="banner" role="note">
+    <strong>Independent concept, not affiliated with Watch Duty.</strong>
+    Every fire, alert, wind reading and shelter here is <strong>simulated</strong>.
+  </div>
+
+  <header class="top">
+    <div class="brand">
+      <h1>FireBuddy</h1>
+      <p class="tag">County alerts tell you a fire exists. FireBuddy tells you what it means for your address.</p>
+    </div>
+    <nav class="modes" aria-label="Mode">
+      <a href="/" data-mode="demo">Demo</a>
+      <a href="/?mode=baseline" data-mode="baseline">Test: baseline</a>
+      <a href="/?mode=firebuddy" data-mode="firebuddy">Test: FireBuddy</a>
+      <a href="https://github.com/tom-rasmussen/firebuddy" rel="noopener">GitHub</a>
+    </nav>
+  </header>
+
+  <!-- DEMO MODE -->
+  <main id="demo" hidden>
+    <section class="timeline" aria-label="Scenario timeline">
+      <div class="timeline-head">
+        <div>
+          <span class="eyebrow">Simulated scenario · Home, Danville, CA</span>
+          <h2 id="step-title">Loading…</h2>
+        </div>
+        <div class="clock" id="step-clock"></div>
+      </div>
+      <ol class="steps" id="steps"></ol>
+      <div class="controls">
+        <button id="prev" type="button">← Back</button>
+        <button id="next" type="button" class="primary">Next moment →</button>
+        <button id="play" type="button">▶ Play</button>
+        <button id="reset" type="button">Reset</button>
+      </div>
+    </section>
+
+    <section class="panels">
+      <article class="panel" aria-labelledby="baseline-h">
+        <header>
+          <h3 id="baseline-h">Today: county-level alert</h3>
+          <p class="sub">A generic, unbranded county push. It says a fire exists, not what it means for you.</p>
+        </header>
+        <ul class="pushes" id="pushes"></ul>
+        <p class="empty" id="pushes-empty">No county alerts yet.</p>
+      </article>
+
+      <article class="panel phone-panel" aria-labelledby="fb-h">
+        <header>
+          <h3 id="fb-h">With FireBuddy</h3>
+          <p class="sub">Alerts arrive on their own. Ask a question to get an answer for this address.</p>
+        </header>
+        <div class="phone">
+          <div class="phone-top">
+            <span>FireBuddy · Home</span>
+            <span class="level" id="level-badge">MONITOR</span>
+          </div>
+          <div class="chat" id="chat" aria-live="polite"></div>
+          <div class="chips" id="chips"></div>
+          <form class="ask" id="ask-form">
+            <label class="sr-only" for="ask-input">Ask FireBuddy</label>
+            <input id="ask-input" maxlength="200" autocomplete="off" placeholder="Ask, e.g. should I leave?">
+            <button type="submit" class="primary">Send</button>
+          </form>
+        </div>
+      </article>
+
+      <article class="panel" aria-labelledby="pm-h">
+        <header>
+          <h3 id="pm-h">PM view: who decided what</h3>
+          <p class="sub">Rules decide. Templates speak. No AI writes alerts.</p>
+        </header>
+        <div class="trace" id="trace">
+          <p class="empty">Ask a question to see the decision trace.</p>
+        </div>
+        <dl class="counters">
+          <div><dt>Alerts sent</dt><dd id="c-alerts">0</dd></div>
+          <div><dt>Questions</dt><dd id="c-questions">0</dd></div>
+          <div><dt>Level changes</dt><dd id="c-levels">0</dd></div>
+        </dl>
+        <h4>Event log</h4>
+        <ol class="log" id="log"></ol>
+        <details class="rules">
+          <summary>The rules FireBuddy follows</summary>
+          <ul>
+            <li>Whether to alert: deterministic code, never an LLM.</li>
+            <li>Readiness level: deterministic rules. Wording can raise urgency, never lower it.</li>
+            <li>Official orders: quoted word for word with sender and time.</li>
+            <li>No generated routes. No "you're safe".</li>
+          </ul>
+        </details>
+      </article>
+    </section>
+  </main>
+
+  <!-- TEST MODE -->
+  <main id="test" hidden>
+    <section class="test-card" id="test-intro">
+      <span class="eyebrow" id="test-condition"></span>
+      <h2>Decision test</h2>
+      <p>Imagine you live at <strong>Home</strong> in Danville, CA. You'll see <strong>4 moments</strong> during a simulated wildfire.</p>
+      <p>At each moment, use only what's on screen and choose what you'd do. Go about as fast as you would in real life. There's no penalty for asking questions.</p>
+      <label class="pid">Participant ID (optional) <input id="pid" maxlength="20" placeholder="P1"></label>
+      <button id="test-start" type="button" class="primary big">Start</button>
+    </section>
+
+    <section class="test-run" id="test-run" hidden>
+      <div class="test-head">
+        <span class="eyebrow" id="test-progress"></span>
+        <h2 id="test-title"></h2>
+        <div class="clock" id="test-clock"></div>
+      </div>
+
+      <div class="test-body">
+        <article class="panel" id="test-baseline" hidden>
+          <header><h3>Your phone's latest alerts</h3></header>
+          <ul class="pushes" id="test-pushes"></ul>
+          <p class="empty" id="test-pushes-empty">No alerts yet.</p>
+        </article>
+
+        <article class="panel phone-panel" id="test-firebuddy" hidden>
+          <div class="phone">
+            <div class="phone-top"><span>FireBuddy · Home</span></div>
+            <div class="chat" id="test-chat" aria-live="polite"></div>
+            <div class="chips" id="test-chips"></div>
+            <form class="ask" id="test-ask-form">
+              <label class="sr-only" for="test-ask-input">Ask FireBuddy</label>
+              <input id="test-ask-input" maxlength="200" autocomplete="off" placeholder="Ask a question">
+              <button type="submit" class="primary">Send</button>
+            </form>
+          </div>
+        </article>
+      </div>
+
+      <div class="decide">
+        <h3>What would you do right now?</h3>
+        <div class="choices" id="choices"></div>
+      </div>
+    </section>
+
+    <section class="test-card" id="test-results" hidden>
+      <span class="eyebrow">Done. Thank you!</span>
+      <h2>Results</h2>
+      <p class="summary" id="results-summary"></p>
+      <table class="results">
+        <thead><tr><th>Moment</th><th>Choice</th><th>Correct level</th><th>Seconds</th><th>Questions</th></tr></thead>
+        <tbody id="results-body"></tbody>
+      </table>
+      <div class="controls">
+        <button id="copy-results" type="button" class="primary">Copy results</button>
+        <a class="button" id="other-condition" href="/">Run the other condition</a>
+      </div>
+      <p class="note">Results stay in this browser. Nothing is sent to a server.</p>
+    </section>
+  </main>
+
+  <footer class="foot">
+    Built on Cloudflare Workers · Spec-driven: see <a href="https://github.com/tom-rasmussen/firebuddy/tree/main/specs/firebuddy-worker">the spec</a> ·
+    Simulated data only. In a real emergency, follow official orders and call 911.
+  </footer>
+
+  <script src="/app.js" defer></script>
+</body>
+</html>
